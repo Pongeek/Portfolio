@@ -34,6 +34,7 @@ export default function ProjectCard({
       <div className="h-56 overflow-hidden bg-muted">
         <img
           src={title.toLowerCase().includes('coupcoupon') ? '/coupon-logo.webp' : (imageUrl || '/image.png')}
+          style={{ objectFit: 'contain', padding: '1rem' }}
           alt={title}
           className="w-full h-full object-cover transition-transform hover:scale-105"
           onError={(e) => {
