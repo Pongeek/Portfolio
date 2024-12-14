@@ -33,12 +33,13 @@ export default function ProjectCard({
     <Card className="flex flex-col h-[32rem] w-[24rem] overflow-hidden project-card animate-fade-up hover:scale-[1.02] transition-transform duration-300">
       <div className="h-56 overflow-hidden bg-muted">
         <img
-          src={imageUrl.startsWith('./') ? imageUrl : `/${imageUrl.replace(/^\//, '')}`}
+          src={title.toLowerCase().includes('coupcoupon') ? '/Coupon.webp' : (imageUrl ?? '/image.png')}
           alt={title}
           className="w-full h-full object-cover transition-transform hover:scale-105"
           onError={(e) => {
             const img = e.target as HTMLImageElement;
             img.src = '/image.png';
+            console.error('Image failed to load:', img.src);
           }}
         />
       </div>
