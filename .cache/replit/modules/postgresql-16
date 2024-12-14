@@ -1,1 +1,1 @@
-{"debuggers":{},"demoted":false,"description":"Tools for working with Postgresql databases.\n","displayVersion":"16","env":{"PATH":"/nix/store/w11g7nvm4h1ph7kjq6c4cxna3yppsn2v-postgresql-16.4/bin"},"formatters":{},"id":"postgresql-16","initializers":{},"internal":false,"languageServers":{},"name":"Postgresql Tools","packagers":{},"runners":{}}
+/nix/store/xg3kcwd323ipjnqr0pvj84xkl025n116-replit-module-postgresql-16
