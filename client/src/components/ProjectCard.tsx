@@ -56,17 +56,13 @@ export default function ProjectCard({
             ))}
           </div>
         </CardContent>
-        <CardFooter className="flex justify-center gap-4 mt-auto pt-4">
-          {liveUrl && (
-            <Button variant="outline" size="sm" className="flex-1 max-w-36" asChild>
-              <a href={liveUrl} target="_blank" rel="noopener noreferrer">
-                <Globe className="mr-2 h-4 w-4" />
-                Live Demo
-              </a>
-            </Button>
-          )}
+        <CardFooter className="flex justify-center mt-auto pt-4">
           <Button variant="outline" size="sm" className="flex-1 max-w-36" asChild>
-            <a href={githubUrl} target="_blank" rel="noopener noreferrer">
+            <a 
+              href={title === "Portfolio Website" ? "https://github.com/Pongeek/Portfolio" : githubUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
               <Github className="mr-2 h-4 w-4" />
               View Code
             </a>
