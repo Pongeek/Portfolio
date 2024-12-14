@@ -263,7 +263,7 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto">
             <h2 className="text-4xl font-bold mb-12 text-center">My Projects</h2>
 
-            <div className="grid gap-8 place-items-center sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
+            <div className="grid gap-8 place-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {projects?.map((project: Project) => (
                 <ProjectCard
                   key={project.id}
