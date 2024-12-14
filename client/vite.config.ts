@@ -12,7 +12,7 @@ export default defineConfig({
     port: 3001,
     host: '0.0.0.0',
     hmr: {
-      protocol: 'ws',
+      protocol: 'wss',
       timeout: 30000,
       clientPort: 443,
       host: 'portfoliopro.maxprog.repl.co'
