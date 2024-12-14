@@ -258,12 +258,12 @@ export default function HomePage() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-20 bg-muted">
+      <section id="projects" className="py-12 bg-muted">
         <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold mb-8 text-center">My Projects</h2>
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl font-bold mb-12 text-center">My Projects</h2>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8 place-items-center sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
               {projects?.map((project: Project) => (
                 <ProjectCard
                   key={project.id}
@@ -278,7 +278,7 @@ export default function HomePage() {
             </div>
 
             {projects?.length === 0 && (
-              <div className="text-center py-12">
+              <div className="text-center py-8">
                 <p className="text-muted-foreground">
                   No projects available yet.
                 </p>
