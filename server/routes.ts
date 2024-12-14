@@ -162,9 +162,10 @@ ${sanitizedData.message}
               clickTracking: { enable: false },
               openTracking: { enable: false }
             },
+            // Remove sandbox mode to ensure actual delivery
             mailSettings: {
               sandboxMode: {
-                enable: process.env.NODE_ENV !== 'production'
+                enable: false
               }
             }
           };
@@ -185,8 +186,14 @@ ${sanitizedData.message}
               to: senderEmail,
               statusCode: response?.statusCode,
               headers: response?.headers,
+              messageId: response?.headers['x-message-id'],
               timestamp: new Date().toISOString()
             });
+
+            // Verify the response is actually successful
+            if (response?.statusCode !== 202) {
+              throw new Error(`Unexpected status code: ${response?.statusCode}`);
+            }
         
             // Return success response
             return res.json({
