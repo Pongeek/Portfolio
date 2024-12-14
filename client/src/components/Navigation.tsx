@@ -29,15 +29,16 @@ export default function Navigation() {
   ];
 
   return (
-    <header className="fixed w-full z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex justify-center items-center h-16 px-4">
-        <NavigationMenu className="relative">
-          <NavigationMenuList className="flex justify-center space-x-6">
+    <header className="fixed w-full z-50 border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+      <div className="container mx-auto flex justify-between items-center h-16">
+        <div className="flex-1" />
+        <NavigationMenu>
+          <NavigationMenuList className="flex items-center justify-center gap-2">
             {links.map((link) => (
               <NavigationMenuItem key={link.id}>
                 <Button
                   variant="ghost"
-                  className="px-6 h-12 text-base font-medium transition-colors hover:text-primary"
+                  className="px-4 h-10 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                   onClick={() => scrollToSection(link.id)}
                 >
                   {link.label}
