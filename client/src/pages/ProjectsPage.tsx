@@ -27,29 +27,31 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="container py-12">
-      <h1 className="text-4xl font-bold mb-8">My Projects</h1>
+    <div className="container py-12 flex flex-col items-center">
+      <h1 className="text-4xl font-bold mb-12 text-center">My Projects</h1>
 
-      <div className="flex gap-4 mb-8">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search projects by title or technology..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10"
-          />
+      <div className="w-full max-w-3xl mb-12">
+        <div className="flex gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search projects by title or technology..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Button
+            variant="outline"
+            onClick={() => setSearch("")}
+            className="shrink-0"
+          >
+            Clear
+          </Button>
         </div>
-        <Button
-          variant="outline"
-          onClick={() => setSearch("")}
-          className="shrink-0"
-        >
-          Clear
-        </Button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto w-full justify-center">
         {filteredProjects?.map((project: Project) => (
           <ProjectCard
             key={project.id}
@@ -64,7 +66,7 @@ export default function ProjectsPage() {
       </div>
 
       {filteredProjects?.length === 0 && (
-        <div className="text-center py-12">
+        <div className="w-full text-center py-12">
           <p className="text-muted-foreground">
             No projects found matching your search criteria.
           </p>
