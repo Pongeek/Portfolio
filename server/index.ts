@@ -189,7 +189,7 @@ if (process.env.NODE_ENV !== "production") {
   setupVite(app, server);
 }
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || process.env.NODE_ENV === "production" ? 3000 : 5000;
 
 // Start server after checking environment and database connection
 async function startServer() {
@@ -207,17 +207,32 @@ async function startServer() {
     }
 
     return new Promise((resolve, reject) => {
-      server.listen(Number(PORT), "0.0.0.0", () => {
-        console.log(`Server running on port ${PORT}`);
-        console.log(`API available at http://localhost:${PORT}/api`);
-        console.log('Development server started successfully');
-        resolve(true);
-      });
+      const startServer = () => {
+        try {
+          server.listen(Number(PORT), "0.0.0.0", () => {
+            console.log(`Server running on port ${PORT}`);
+            console.log(`API available at http://localhost:${PORT}/api`);
+            console.log('Development server started successfully');
+            resolve(true);
+          });
 
-      server.on('error', (error: Error) => {
-        console.error('Server error:', error);
-        reject(error);
-      });
+          server.on('error', (error: NodeJS.ErrnoException) => {
+            if (error.code === 'EADDRINUSE') {
+              console.log(`Port ${PORT} is busy, retrying...`);
+              server.close();
+              setTimeout(startServer, 1000);
+            } else {
+              console.error('Server error:', error);
+              reject(error);
+            }
+          });
+        } catch (err) {
+          console.error('Failed to start server:', err);
+          reject(err);
+        }
+      };
+
+      startServer();
     });
   } catch (error) {
     console.error('Failed to start server:', error instanceof Error ? error.message : String(error));

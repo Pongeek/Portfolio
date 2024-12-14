@@ -122,8 +122,8 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-        <div className="container relative h-full flex items-start pt-16">
-          <div className="max-w-2xl text-white font-mono">
+        <div className="container mx-auto relative h-full flex items-center justify-center pt-16">
+          <div className="max-w-2xl text-white font-mono text-center">
             <div className="terminal-header mb-4 flex items-center gap-2">
               <Terminal className="h-5 w-5" />
               <span className="text-sm opacity-70">portfolio.tsx</span>
@@ -197,12 +197,12 @@ export default function HomePage() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 bg-muted">
-        <div className="container">
-          <div className="flex flex-col gap-8">
-            <div>
-              <h2 className="text-3xl font-bold mb-6">About Me</h2>
-              <p className="text-lg text-muted-foreground mb-6">
+      <section id="about" className="py-24 bg-muted">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-center gap-12 max-w-4xl mx-auto">
+            <div className="text-center">
+              <h2 className="text-4xl font-bold mb-8">About Me</h2>
+              <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto">
                 Hi there! I'm Max Mullokandov, a dedicated Full Stack Developer with a strong foundation in Computer Science from The Open University of Israel. My journey in software development has equipped me with expertise in both Java and ReactJS, allowing me to build seamless, end-to-end solutions. I thrive on creating intuitive user experiences while ensuring robust backend functionality. As a developer, I combine my academic knowledge with hands-on experience to deliver impactful solutions that make a difference. I'm particularly passionate about clean code, modern web technologies, and creating applications that solve real-world problems.
               </p>
             </div>
@@ -227,13 +227,13 @@ export default function HomePage() {
       
 
       {/* Skills Section */}
-      <section id="skills" className="py-20">
-        <div className="container">
-          <h2 className="text-4xl font-bold mb-8">Technical Skills</h2>
+      <section id="skills" className="py-24">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold mb-12 text-center">Technical Skills</h2>
           {categories.map((category: string) => (
-            <div key={category} className="mb-12">
-              <h3 className="text-2xl font-semibold mb-6 capitalize">{category}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div key={category} className="mb-16 max-w-6xl mx-auto">
+              <h3 className="text-2xl font-semibold mb-8 capitalize text-center">{category}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {skills
                   ?.filter((skill: Skill) => skill.category === category)
                   .map((skill: Skill) => (
@@ -281,11 +281,11 @@ export default function HomePage() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20">
-        <div className="container">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-4xl font-bold mb-4">Get in Touch</h2>
-            <p className="text-muted-foreground mb-8">
+      <section id="contact" className="py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-4xl font-bold mb-6">Get in Touch</h2>
+            <p className="text-muted-foreground mb-10">
               Feel free to reach out directly at{" "}
               <a 
                 href="mailto:MaximPim95@gmail.com" 
