@@ -33,7 +33,7 @@ export default function ProjectCard({
     <Card className="flex flex-col h-[32rem] w-[24rem] overflow-hidden project-card animate-fade-up hover:scale-[1.02] transition-transform duration-300">
       <div className="h-56 overflow-hidden bg-muted">
         <img
-          src={title.toLowerCase().includes('coupcoupon') ? '/coupon-image.png' : (imageUrl || '/image.png')}
+          src={title.toLowerCase().includes('coupcoupon') ? '/coupon-logo.webp' : (imageUrl || '/image.png')}
           alt={title}
           className="w-full h-full object-cover transition-transform hover:scale-105"
           onError={(e) => {
