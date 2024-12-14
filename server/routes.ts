@@ -169,38 +169,57 @@ ${sanitizedData.message}
             }
           };
 
-          // Send email with detailed error handling
+          // Send email with detailed error handling and logging
           try {
-            const [response] = await sgMail.send(emailContent);
-            console.log('Email sent successfully:', {
+            console.log('Attempting to send email via SendGrid...');
+            console.log('Email content:', {
               to: senderEmail,
-              statusCode: response.statusCode,
-              headers: response.headers
+              from: emailContent.from.email,
+              subject: emailContent.subject,
+              hasText: !!emailContent.text,
+              hasHtml: !!emailContent.html
+            });
+            
+            const [response] = await sgMail.send(emailContent);
+            console.log('SendGrid API Response:', {
+              to: senderEmail,
+              statusCode: response?.statusCode,
+              headers: response?.headers,
+              timestamp: new Date().toISOString()
             });
         
             // Return success response
             return res.json({
               success: true,
               message: savedMessage,
-              emailSent: true
+              emailSent: true,
+              details: {
+                to: senderEmail,
+                timestamp: new Date().toISOString()
+              }
             });
           } catch (sendGridError: any) {
             console.error('SendGrid send error:', {
               error: sendGridError?.message || String(sendGridError),
               response: sendGridError?.response?.body,
               code: sendGridError?.code,
-              statusCode: sendGridError?.response?.statusCode
+              statusCode: sendGridError?.response?.statusCode,
+              timestamp: new Date().toISOString()
             });
 
-            // Check for specific SendGrid errors
-            const errorMessage = sendGridError?.response?.body?.errors?.[0]?.message 
-              || 'Failed to send email. Please try again later.';
+            // Check for specific SendGrid errors and provide detailed feedback
+            const errorDetails = sendGridError?.response?.body;
+            const specificError = errorDetails?.errors?.[0]?.message;
+            const errorMessage = specificError
+              ? `Email sending failed: ${specificError}`
+              : 'Unable to send email. Please try again later.';
 
             return res.status(500).json({
               success: false,
               message: savedMessage,
               emailSent: false,
-              error: errorMessage
+              error: errorMessage,
+              details: process.env.NODE_ENV === 'development' ? errorDetails : undefined
             });
           }
         } catch (emailError: any) {
