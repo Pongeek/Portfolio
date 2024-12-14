@@ -113,92 +113,120 @@ export function registerRoutes(app: Express) {
       }
 
       // Initialize SendGrid
-      try {
-        const { default: sgMail } = await import('@sendgrid/mail');
-        const apiKey = process.env.SENDGRID_API_KEY;
-        
-        if (!apiKey) {
-          throw new Error('SendGrid API key is missing');
-        }
-        
-        console.log('Configuring SendGrid with API key');
-        sgMail.setApiKey(apiKey);
+        try {
+          const { default: sgMail } = await import('@sendgrid/mail');
+          const apiKey = process.env.SENDGRID_API_KEY;
+          
+          if (!apiKey) {
+            console.error('SendGrid API key is missing');
+            throw new Error('Email service configuration error');
+          }
+          
+          console.log('Configuring SendGrid with API key');
+          sgMail.setApiKey(apiKey);
 
-        const senderEmail = 'MaximPim95@gmail.com';
-        const replyToEmail = sanitizedData.email; // Use the sender's email as reply-to
-        
-        // Prepare email content with proper sender format and security headers
-        const emailContent = {
-          to: senderEmail,
-          from: {
-            email: senderEmail,
-            name: 'Portfolio Website Contact Form'
-          },
-          replyTo: replyToEmail,
-          subject: 'New Portfolio Contact Message',
-          text: `New message from your portfolio website:
+          const senderEmail = 'MaximPim95@gmail.com';
+          const replyToEmail = sanitizedData.email;
+          
+          // Prepare email content with proper sender format and security headers
+          const emailContent = {
+            to: senderEmail,
+            from: {
+              email: senderEmail,
+              name: 'Portfolio Website'
+            },
+            replyTo: replyToEmail,
+            subject: 'New Contact Form Message',
+            text: `New message from your portfolio website:
 
 From: ${sanitizedData.name}
-Reply-to Email: ${sanitizedData.email}
-Message: ${sanitizedData.message}
-          `.trim(),
-          html: `
-<h2>New Contact Form Submission</h2>
-<p><strong>From:</strong> ${sanitizedData.name}</p>
-<p><strong>Reply-to Email:</strong> ${sanitizedData.email}</p>
-<p><strong>Message:</strong></p>
-<p>${sanitizedData.message}</p>
-          `.trim(),
-          trackingSettings: {
-            clickTracking: { enable: false },
-            openTracking: { enable: false }
-          }
-        };
+Email: ${sanitizedData.email}
+Message:
+${sanitizedData.message}
+            `.trim(),
+            html: `
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+  <h2 style="color: #2563eb;">New Contact Form Submission</h2>
+  <p><strong>From:</strong> ${sanitizedData.name}</p>
+  <p><strong>Email:</strong> ${sanitizedData.email}</p>
+  <p><strong>Message:</strong></p>
+  <div style="background: #f9fafb; padding: 15px; border-radius: 5px; margin: 10px 0;">
+    ${sanitizedData.message}
+  </div>
+</body>
+</html>
+            `.trim(),
+            trackingSettings: {
+              clickTracking: { enable: false },
+              openTracking: { enable: false }
+            },
+            mailSettings: {
+              sandboxMode: {
+                enable: process.env.NODE_ENV !== 'production'
+              }
+            }
+          };
 
-        // Send email with detailed error handling
-        try {
-          await sgMail.send(emailContent);
-          console.log('Email sent successfully to', senderEmail);
+          // Send email with detailed error handling
+          try {
+            const [response] = await sgMail.send(emailContent);
+            console.log('Email sent successfully:', {
+              to: senderEmail,
+              statusCode: response.statusCode,
+              headers: response.headers
+            });
         
-        // Return success response
-        return res.json({
-          success: true,
-          message: savedMessage,
-          emailSent: true
-        });
-      } catch (sendGridError) {
-          console.error('SendGrid send error:', {
-            error: sendGridError instanceof Error ? sendGridError.message : String(sendGridError),
-            response: sendGridError instanceof Error && 'response' in sendGridError ? (sendGridError as any).response?.body : undefined
+            // Return success response
+            return res.json({
+              success: true,
+              message: savedMessage,
+              emailSent: true
+            });
+          } catch (sendGridError: any) {
+            console.error('SendGrid send error:', {
+              error: sendGridError?.message || String(sendGridError),
+              response: sendGridError?.response?.body,
+              code: sendGridError?.code,
+              statusCode: sendGridError?.response?.statusCode
+            });
+
+            // Check for specific SendGrid errors
+            const errorMessage = sendGridError?.response?.body?.errors?.[0]?.message 
+              || 'Failed to send email. Please try again later.';
+
+            return res.status(500).json({
+              success: false,
+              message: savedMessage,
+              emailSent: false,
+              error: errorMessage
+            });
+          }
+        } catch (emailError: any) {
+          console.error('Email service error:', {
+            error: emailError?.message || String(emailError),
+            code: emailError?.code,
+            stack: process.env.NODE_ENV === 'development' ? emailError?.stack : undefined
           });
-          throw new Error('Failed to send email via SendGrid');
-        }
-      } catch (emailError) {
-        console.error('Email configuration error:', {
-          error: emailError instanceof Error ? emailError.message : String(emailError),
-          stack: emailError instanceof Error ? emailError.stack : undefined
-        });
         
-        // Return detailed error response
-        return res.status(500).json({
-          success: false,
-          message: savedMessage,
-          emailSent: false,
-          error: 'Failed to send email notification. Your message has been saved and we will get back to you soon.',
-          details: process.env.NODE_ENV === 'development' ? 
-            (emailError instanceof Error ? emailError.message : String(emailError)) : 
-            'Internal server error'
+          // Return user-friendly error response
+          return res.status(500).json({
+            success: false,
+            message: savedMessage,
+            emailSent: false,
+            error: 'We were unable to send your message via email, but it has been saved. We will get back to you soon.'
+          });
+        }
+      } catch (error: unknown) {
+        console.error('Unexpected error in contact form:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        return res.status(500).json({ 
+          error: 'Failed to process contact form submission',
+          details: errorMessage 
         });
       }
-    } catch (error: unknown) {
-      console.error('Unexpected error in contact form:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      return res.status(500).json({ 
-        error: 'Failed to process contact form submission',
-        details: errorMessage 
-      });
-    }
-  });
+    });
 
   // Auth
   app.post("/api/auth/login", async (req, res) => {
