@@ -48,7 +48,7 @@ export default function ContactPage() {
 
   return (
     <div className="container py-12">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl">
         <h1 className="text-4xl font-bold mb-8">Get in Touch</h1>
         
         <Card className="p-6">
