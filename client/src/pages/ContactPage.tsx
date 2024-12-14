@@ -48,25 +48,25 @@ export default function ContactPage() {
 
   return (
     <div className="container py-12">
-      <div className="max-w-2xl">
+      <div className="max-w-2xl mx-auto">
         <h1 className="text-4xl font-bold mb-8">Get in Touch</h1>
         
         <Card className="p-6">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
-              className="space-y-6 flex flex-col items-start w-full"
+              className="space-y-6"
             >
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem className="w-full">
+                  <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input placeholder="Your name" {...field} />
                     </FormControl>
-                    <FormMessage className="text-left" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -75,7 +75,7 @@ export default function ContactPage() {
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem className="w-full">
+                  <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
@@ -84,7 +84,7 @@ export default function ContactPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="text-left" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -93,7 +93,7 @@ export default function ContactPage() {
                 control={form.control}
                 name="message"
                 render={({ field }) => (
-                  <FormItem className="w-full">
+                  <FormItem>
                     <FormLabel>Message</FormLabel>
                     <FormControl>
                       <Textarea
@@ -102,7 +102,7 @@ export default function ContactPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="text-left" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
