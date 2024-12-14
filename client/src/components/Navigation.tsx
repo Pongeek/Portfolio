@@ -4,6 +4,7 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { ThemeToggle } from "./ThemeToggle";
 
 export default function Navigation() {
   const scrollToSection = (sectionId: string) => {
@@ -31,8 +32,9 @@ export default function Navigation() {
   return (
     <header className="fixed w-full z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex items-center justify-center h-16">
-        <NavigationMenu className="flex justify-center">
+        <NavigationMenu className="flex justify-between w-full max-w-screen-xl">
           <NavigationMenuList className="flex items-center gap-6">
+            <ThemeToggle />
             {links.map((link) => (
               <NavigationMenuItem key={link.id}>
                 <Button
