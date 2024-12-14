@@ -28,7 +28,7 @@
         "JWT",
         "RestAPI"
       ],
-      "imageUrl": "/Coupon.webp",
+      "imageUrl": "/public/Coupon.webp",
       "liveUrl": "https://coupcoupon.repl.co",
       "githubUrl": "https://github.com/Pongeek/coupcoupon",
       "createdAt": "2024-12-11T22:03:19.604Z"
