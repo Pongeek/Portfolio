@@ -30,9 +30,9 @@ export default function Navigation() {
 
   return (
     <header className="fixed w-full z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex justify-center items-center h-16">
-        <NavigationMenu>
-          <NavigationMenuList className="flex space-x-4">
+      <div className="container mx-auto flex justify-center items-center h-16 px-4">
+        <NavigationMenu className="relative">
+          <NavigationMenuList className="flex justify-center space-x-6">
             {links.map((link) => (
               <NavigationMenuItem key={link.id}>
                 <Button

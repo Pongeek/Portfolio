@@ -291,9 +291,9 @@ export default function HomePage() {
       {/* Contact Section */}
       <section id="contact" className="py-24">
         <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-4xl font-bold mb-6">Get in Touch</h2>
-            <p className="text-muted-foreground mb-10">
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-4xl font-bold mb-6 text-center">Get in Touch</h2>
+            <p className="text-muted-foreground mb-10 text-center">
               Feel free to reach out directly at{" "}
               <a 
                 href="mailto:MaximPim95@gmail.com" 
@@ -304,11 +304,11 @@ export default function HomePage() {
               {" "}or use the form below.
             </p>
             
-            <Card className="p-6">
+            <Card className="p-8">
               <Form {...contactForm}>
                 <form
                   onSubmit={contactForm.handleSubmit((data) => contactMutation.mutate(data))}
-                  className="space-y-6"
+                  className="space-y-6 text-left"
                 >
                   <FormField
                     control={contactForm.control}
