@@ -12,8 +12,10 @@ export default defineConfig({
     port: 3001,
     host: '0.0.0.0',
     hmr: {
+      protocol: 'ws',
+      timeout: 30000,
       clientPort: 443,
-      host: 'portfoliopro.maxprog.repl.co',
+      host: 'portfoliopro.maxprog.repl.co'
     },
     proxy: {
       '/api': {
