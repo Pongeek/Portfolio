@@ -61,12 +61,12 @@ export default function ContactPage() {
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
+                  <FormItem className="text-left">
+                    <FormLabel className="text-left">Name</FormLabel>
                     <FormControl>
                       <Input placeholder="Your name" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-left" />
                   </FormItem>
                 )}
               />
@@ -75,8 +75,8 @@ export default function ContactPage() {
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
+                  <FormItem className="text-left">
+                    <FormLabel className="text-left">Email</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
@@ -84,7 +84,7 @@ export default function ContactPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-left" />
                   </FormItem>
                 )}
               />
@@ -93,8 +93,8 @@ export default function ContactPage() {
                 control={form.control}
                 name="message"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Message</FormLabel>
+                  <FormItem className="text-left">
+                    <FormLabel className="text-left">Message</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Your message here..."
@@ -102,7 +102,7 @@ export default function ContactPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-left" />
                   </FormItem>
                 )}
               />
