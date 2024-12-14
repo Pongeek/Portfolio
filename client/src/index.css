@@ -7,6 +7,8 @@
     --border: 210 40% 96.1%;
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
   }
 
   * {
@@ -83,7 +85,7 @@
 
 /* Code-like effects */
 .terminal-header {
-  @apply bg-muted/20 rounded-t-lg p-2;
+  @apply bg-muted-20 rounded-t-lg p-2;
 }
 
 /* Project card hover effects */
