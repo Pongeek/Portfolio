@@ -104,7 +104,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section id="home" className="relative h-[500px] overflow-hidden">
+      <section id="home" className="relative h-[400px] overflow-hidden">
         <div className="absolute inset-0 bg-black/90">
           <div className="matrix-bg opacity-20">
             {matrixBg.map((char, i) => (
@@ -122,74 +122,82 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-        <div className="container mx-auto relative h-full flex items-center justify-center pt-16">
+        <div className="container mx-auto relative h-full flex items-center justify-center">
           <div className="max-w-2xl text-white font-mono text-center">
-            <div className="terminal-header mb-4 flex items-center gap-2">
+            <div className="terminal-header mb-3 flex items-center justify-center gap-2">
               <Terminal className="h-5 w-5" />
               <span className="text-sm opacity-70">portfolio.tsx</span>
             </div>
-            <h1 className="text-5xl font-bold mb-4 text-primary relative group">
-              <span className="inline-block">
+            <h1 className="text-5xl font-bold mb-2 text-primary relative">
+              <div className="relative h-[60px] flex items-center justify-center">
                 <Code className="absolute -left-8 top-1/2 -translate-y-1/2 h-6 w-6 opacity-70" />
-                <Typewriter
-                  options={{
-                    strings: ['Max Mullokandov'],
-                    autoStart: true,
-                    loop: true,
-                    delay: 50,
-                    deleteSpeed: 50,
-                    cursor: '|'
-                  }}
-                />
+                <span className="inline-block min-w-[300px]">
+                  <Typewriter
+                    options={{
+                      strings: ['Max Mullokandov'],
+                      autoStart: true,
+                      loop: true,
+                      delay: 50,
+                      deleteSpeed: 50,
+                      cursor: '|'
+                    }}
+                  />
+                </span>
                 <Braces className="absolute -right-8 top-1/2 -translate-y-1/2 h-6 w-6 opacity-70" />
-              </span>
+              </div>
             </h1>
             <div className="text-2xl mb-4 text-primary/80">
-              <Typewriter
-                options={{
-                  strings: ['Full Stack Developer'],
-                  autoStart: true,
-                  loop: true,
-                  delay: 50,
-                  deleteSpeed: 50,
-                  cursor: '_'
-                }}
-              />
-              <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
-                <FileText className="h-4 w-4" />
-                <a href="/Max Mullokandov CV.pdf" download className="hover:text-primary transition-colors">
-                  Download Resume
-                </a>
+              <div className="h-[40px] flex items-center justify-center">
+                <span className="inline-block min-w-[200px]">
+                  <Typewriter
+                    options={{
+                      strings: ['Full Stack Developer'],
+                      autoStart: true,
+                      loop: true,
+                      delay: 50,
+                      deleteSpeed: 50,
+                      cursor: '_'
+                    }}
+                  />
+                </span>
               </div>
-              <div className="flex items-center gap-4 mt-4">
-                <Button asChild variant="outline" size="icon">
-                  <a
-                    href="https://github.com/Pongeek"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Github className="h-5 w-5" />
+              <div className="flex flex-col items-center gap-4 mt-4">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <FileText className="h-4 w-4" />
+                  <a href="/Max Mullokandov CV.pdf" download className="hover:text-primary transition-colors">
+                    Download Resume
                   </a>
-                </Button>
-                <Button asChild variant="outline" size="icon">
-                  <a
-                    href="https://www.linkedin.com/in/maxim-mullokandov/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Linkedin className="h-5 w-5" />
-                  </a>
-                </Button>
-                <Button asChild variant="outline" size="icon">
-                  <a href="mailto:MaximPim95@gmail.com">
-                    <Mail className="h-5 w-5" />
-                  </a>
-                </Button>
-                <Button asChild variant="outline" size="icon">
-                  <a href="/Max Mullokandov CV.pdf" download>
-                    <FileText className="h-5 w-5" />
-                  </a>
-                </Button>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Button asChild variant="outline" size="icon">
+                    <a
+                      href="https://github.com/Pongeek"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Github className="h-5 w-5" />
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" size="icon">
+                    <a
+                      href="https://www.linkedin.com/in/maxim-mullokandov/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Linkedin className="h-5 w-5" />
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" size="icon">
+                    <a href="mailto:MaximPim95@gmail.com">
+                      <Mail className="h-5 w-5" />
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" size="icon">
+                    <a href="/Max Mullokandov CV.pdf" download>
+                      <FileText className="h-5 w-5" />
+                    </a>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -251,32 +259,32 @@ export default function HomePage() {
 
       {/* Projects Section */}
       <section id="projects" className="py-20 bg-muted">
-        <div className="container">
-          <h2 className="text-4xl font-bold mb-8">My Projects</h2>
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold mb-8 text-center">My Projects</h2>
 
-          {/* Search functionality removed as requested */}
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {projects?.map((project: Project) => (
-              <ProjectCard
-                key={project.id}
-                title={project.title}
-                description={project.description}
-                technologies={Array.isArray(project.technologies) ? project.technologies : []}
-                imageUrl={project.imageUrl}
-                liveUrl={project.liveUrl}
-                githubUrl={project.githubUrl}
-              />
-            ))}
-          </div>
-
-          {projects?.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">
-                No projects available yet.
-              </p>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {projects?.map((project: Project) => (
+                <ProjectCard
+                  key={project.id}
+                  title={project.title}
+                  description={project.description}
+                  technologies={Array.isArray(project.technologies) ? project.technologies : []}
+                  imageUrl={project.imageUrl}
+                  liveUrl={project.liveUrl}
+                  githubUrl={project.githubUrl}
+                />
+              ))}
             </div>
-          )}
+
+            {projects?.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">
+                  No projects available yet.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 

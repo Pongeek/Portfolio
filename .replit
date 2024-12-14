@@ -15,6 +15,10 @@ localPort = 3000
 externalPort = 3000
 
 [[ports]]
+localPort = 3001
+externalPort = 3001
+
+[[ports]]
 localPort = 5000
 externalPort = 80
 
@@ -28,26 +32,11 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Portfolio App"
+args = "Portfolio Server"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Portfolio Server"
-
-[[workflows.workflow]]
-name = "Portfolio App"
-author = "agent"
-
-[workflows.workflow.metadata]
-agentRequireRestartOnSave = false
-
-[[workflows.workflow.tasks]]
-task = "packager.installForAll"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm run dev"
-waitForPort = 3000
+args = "Portfolio App"
 
 [[workflows.workflow]]
 name = "Portfolio Server"
@@ -63,3 +52,18 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "tsx watch --clear-screen=false server/index.ts"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Portfolio App"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd client && npx vite --port 3001"
+waitForPort = 3001
