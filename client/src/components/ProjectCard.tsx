@@ -44,8 +44,8 @@ export default function ProjectCard({
       </div>
       <div className="flex flex-col flex-grow">
         <CardHeader className="flex-none">
-          <CardTitle className="line-clamp-1">{title}</CardTitle>
-          <CardDescription className="line-clamp-2 h-12">{description}</CardDescription>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription className="min-h-[3rem] text-sm">{description}</CardDescription>
         </CardHeader>
         <CardContent className="flex-grow">
           <div className="flex flex-wrap gap-2">
