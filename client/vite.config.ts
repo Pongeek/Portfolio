@@ -5,30 +5,22 @@ import runtimeErrorModal from '@replit/vite-plugin-runtime-error-modal';
 
 export default defineConfig({
   plugins: [
-    react({
-      fastRefresh: true,
-    }),
+    react(),
     runtimeErrorModal(),
   ],
   server: {
     port: 3001,
     host: '0.0.0.0',
-    strictPort: true,
     hmr: {
       clientPort: 443,
-      protocol: 'wss',
+      host: 'portfoliopro.maxprog.repl.co',
     },
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
-        ws: true,
       }
-    },
-    watch: {
-      usePolling: true,
-      interval: 1000,
     }
   },
   resolve: {
@@ -38,13 +30,11 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['react', 'react-dom'],
-    force: true
+    include: ['react', 'react-dom']
   },
   build: {
     sourcemap: true,
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
+    outDir: '../dist/client',
+    emptyOutDir: true
   }
 });
