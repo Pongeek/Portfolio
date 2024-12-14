@@ -36,11 +36,10 @@ export default function ProjectCard({
           src={title.toLowerCase().includes('coupcoupon') ? '/Coupon.webp' : (imageUrl ?? '/image.png')}
           alt={title}
           className="w-full h-full object-cover transition-transform hover:scale-105"
-          loading="eager"
           onError={(e) => {
             const img = e.target as HTMLImageElement;
             img.src = '/image.png';
-            console.error('Image failed to load:', imageUrl);
+            console.error('Image failed to load:', img.src);
           }}
         />
       </div>

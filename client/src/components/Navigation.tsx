@@ -30,7 +30,7 @@ export default function Navigation() {
 
   return (
     <header className="fixed w-full z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex items-center justify-center h-16 max-w-screen-xl">
+      <div className="container mx-auto flex items-center justify-center h-16">
         <NavigationMenu className="flex justify-center">
           <NavigationMenuList className="flex items-center gap-6">
             {links.map((link) => (
