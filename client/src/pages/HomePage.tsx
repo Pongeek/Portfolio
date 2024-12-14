@@ -258,12 +258,12 @@ export default function HomePage() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-16 bg-muted">
+      <section id="projects" className="py-20 bg-muted">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold mb-12 text-center">My Projects</h2>
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold mb-8 text-center">My Projects</h2>
 
-            <div className="grid gap-8 md:grid-cols-2 place-items-center w-full">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {projects?.map((project: Project) => (
                 <ProjectCard
                   key={project.id}

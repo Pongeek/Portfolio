@@ -3,20 +3,12 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --border: 210 40% 96.1%;
-    --background: 0 0% 100%;
-    --foreground: 222.2 47.4% 11.2%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-  }
-
   * {
-    @apply border-[hsl(var(--border))];
+    @apply border-border;
   }
 
   body {
-    @apply font-sans antialiased bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
+    @apply font-sans antialiased bg-background text-foreground;
   }
 }
 
@@ -85,7 +77,7 @@
 
 /* Code-like effects */
 .terminal-header {
-  @apply bg-[hsl(var(--muted)/0.2)] rounded-t-lg p-2;
+  @apply bg-muted/20 rounded-t-lg p-2;
 }
 
 /* Project card hover effects */
