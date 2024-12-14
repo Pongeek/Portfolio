@@ -85,7 +85,7 @@
 
 /* Code-like effects */
 .terminal-header {
-  @apply bg-muted-20 rounded-t-lg p-2;
+  @apply bg-[hsl(var(--muted)/0.2)] rounded-t-lg p-2;
 }
 
 /* Project card hover effects */
