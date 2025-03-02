@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "tsc --project tsconfig.vercel.json && npm run build",
   "outputDirectory": "client/dist",
   "installCommand": "npm install",
   "rewrites": [
