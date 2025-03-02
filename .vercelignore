@@ -1,5 +1,10 @@
+**/server/**
+server
 server/
-server/**/*
-node_modules/
+server/api/
+tsconfig.server.json
+dist/server
 .env
-dev.db 
+dev.db
+*.db
+node_modules/ 
