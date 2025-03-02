@@ -1,33 +1,17 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "outputDirectory": "client/dist",
-  "installCommand": "npm install",
   "functions": {
-    "server/api/**/*": {
+    "api/**/*": {
       "memory": 1024
     }
   },
   "routes": [
-    {
-      "src": "/api/projects",
-      "dest": "/server/api/projects.ts"
-    },
-    {
-      "src": "/api/contact",
-      "dest": "/server/api/contact.ts"
-    },
-    {
-      "src": "/profile-image",
-      "dest": "/server/api/profile-image.ts"
-    },
-    {
-      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|svg|pdf|webp)$)",
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+    { "src": "/api/projects", "dest": "/api/projects.ts" },
+    { "src": "/api/contact", "dest": "/api/contact.ts" },
+    { "src": "/(.*)", "dest": "/client/$1" }
+  ],
+  "builds": [
+    { "src": "client/**/*", "use": "@vercel/static" },
+    { "src": "api/**/*", "use": "@vercel/node" }
   ]
 } 

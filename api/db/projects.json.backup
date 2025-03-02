@@ -1,0 +1,53 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "title": "Portfolio Website",
+      "description": "A modern portfolio website built with React, Express, and PostgreSQL",
+      "technologies": [
+        "React",
+        "TypeScript",
+        "Express",
+        "PostgreSQL",
+        "Tailwind CSS"
+      ],
+      "imageUrl": "/EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png",
+      "liveUrl": "https://portfolio-demo.com",
+      "githubUrl": "https://github.com/username/portfolio",
+      "createdAt": "2024-12-10T12:20:22.747Z"
+    },
+    {
+      "id": 8,
+      "title": "CoupCoupon",
+      "description": "A comprehensive platform for managing coupons and deals, featuring role-based access control for admins, companies, and customers. Built with modern web technologies. This platform enables admins to manage users and deals, companies to create and manage coupons, and customers to browse and redeem available offers.",
+      "technologies": [
+        "Java Spring",
+        "React",
+        "MySQL",
+        "TypeScript",
+        "JWT",
+        "RestAPI"
+      ],
+      "imageUrl": "/coupcoupon-landing.png",
+      "liveUrl": "https://coupcoupon.repl.co",
+      "githubUrl": "https://github.com/Pongeek/CoupCoupon-client",
+      "createdAt": "2024-12-11T22:03:19.604Z"
+    },
+    {
+      "id": 9,
+      "title": "Billiard Game - Squeak Smalltalk",
+      "description": "An interactive billiard game implemented in Squeak Smalltalk, featuring realistic physics, collision detection, and an intuitive user interface. Players can aim and shoot using mouse controls, with the game automatically handling ball movements, collisions, and pocket detection.",
+      "technologies": [
+        "Squeak Smalltalk",
+        "Object-Oriented Programming",
+        "Physics Simulation",
+        "UI Design",
+        "Game Development"
+      ],
+      "imageUrl": "/EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png",
+      "liveUrl": "",
+      "githubUrl": "https://github.com/Pongeek/object-oriented-programming-Squeak-Smalltalk/tree/main/Maman15",
+      "createdAt": "2025-03-02T14:30:00.000Z"
+    }
+  ]
+}
