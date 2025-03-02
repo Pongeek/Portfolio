@@ -3,6 +3,10 @@
   "buildCommand": "npm run build",
   "outputDirectory": "client/dist",
   "installCommand": "npm install",
+  "rewrites": [
+    { "source": "/api/projects", "destination": "/api/projects" },
+    { "source": "/api/contact", "destination": "/api/contact" }
+  ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|svg|pdf|webp)$)", "dest": "/$1" },
