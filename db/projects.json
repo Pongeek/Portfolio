@@ -13,7 +13,7 @@
       ],
       "imageUrl": "/EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png",
       "liveUrl": "https://portfolio-demo.com",
-      "githubUrl": "https://github.com/username/portfolio",
+      "githubUrl": "https://github.com/Pongeek/Portfolio",
       "createdAt": "2024-12-10T12:20:22.747Z"
     },
     {
@@ -30,8 +30,24 @@
       ],
       "imageUrl": "/coupcoupon-landing.png",
       "liveUrl": "https://coupcoupon.repl.co",
-      "githubUrl": "https://github.com/Pongeek/coupcoupon",
+      "githubUrl": "https://github.com/Pongeek/CoupCoupon-client",
       "createdAt": "2024-12-11T22:03:19.604Z"
+    },
+    {
+      "id": 9,
+      "title": "Billiard Game - Squeak Smalltalk",
+      "description": "An interactive billiard game implemented in Squeak Smalltalk, featuring realistic physics, collision detection, and an intuitive user interface. Players can aim and shoot using mouse controls, with the game automatically handling ball movements, collisions, and pocket detection.",
+      "technologies": [
+        "Squeak Smalltalk",
+        "Object-Oriented Programming",
+        "Physics Simulation",
+        "UI Design",
+        "Game Development"
+      ],
+      "imageUrl": "/billiardTable.png",
+      "liveUrl": "",
+      "githubUrl": "https://github.com/Pongeek/object-oriented-programming-Squeak-Smalltalk/tree/main/Maman15",
+      "createdAt": "2025-03-02T14:30:00.000Z"
     }
   ]
 }

@@ -2,6 +2,11 @@ import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from 'url';
+
+// Fix for __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Ensure the data directory exists
 const dataDir = path.join(process.cwd(), "data");
@@ -18,7 +23,7 @@ export const devDb = drizzle(sqlite);
 (devDb as any).$client = sqlite;
 
 // Initialize SQLite database
-export const setupDevDb = async () => {
+export function setupDevDb() {
   try {
     console.log('Setting up SQLite database for development...');
     
@@ -81,6 +86,50 @@ export const setupDevDb = async () => {
       );
     `);
     
+    // Load projects from JSON file
+    const projectsData = JSON.parse(fs.readFileSync(path.join(__dirname, 'projects.json'), 'utf8'));
+    
+    // Insert projects from the JSON file
+    if (projectsData && projectsData.projects && projectsData.projects.length > 0) {
+      // Drop existing projects first
+      sqlite.exec(`DROP TABLE IF EXISTS projects`);
+      
+      // Create projects table
+      sqlite.exec(`
+        CREATE TABLE IF NOT EXISTS projects (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          description TEXT NOT NULL,
+          technologies TEXT,
+          image_url TEXT,
+          live_url TEXT,
+          github_url TEXT,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+      
+      // Prepare insert statement
+      const insertProject = sqlite.prepare(`
+        INSERT INTO projects (title, description, technologies, image_url, live_url, github_url, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `);
+      
+      // Insert each project
+      for (const project of projectsData.projects) {
+        insertProject.run(
+          project.title,
+          project.description,
+          JSON.stringify(project.technologies),
+          project.imageUrl,
+          project.liveUrl || '',
+          project.githubUrl || '',
+          project.createdAt || new Date().toISOString()
+        );
+      }
+      
+      console.log(`Loaded ${projectsData.projects.length} projects from projects.json`);
+    }
+    
     // Add sample data
     const profileExists = sqlite.prepare("SELECT COUNT(*) as count FROM profile").get() as { count: number };
     if (profileExists.count === 0) {
@@ -97,6 +146,8 @@ export const setupDevDb = async () => {
         )
       `).run();
       
+      // We're already loading projects from projects.json, so we don't need these hardcoded inserts
+      /*
       console.log('Adding your project data...');
       sqlite.prepare(`
         INSERT INTO projects (title, description, technologies, image_url, github_url, live_url)
@@ -106,20 +157,22 @@ export const setupDevDb = async () => {
           '["React", "TypeScript", "Express", "PostgreSQL", "Tailwind CSS", "Shadcn UI"]', 
           '/EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png',
           'https://github.com/yourusername/portfolio',
-          'https://your-portfolio-url.com'
+          'https://portfolio-demo.com'
         )
       `).run();
-      
+
       sqlite.prepare(`
-        INSERT INTO projects (title, description, technologies, image_url, github_url)
+        INSERT INTO projects (title, description, technologies, image_url, github_url, live_url)
         VALUES (
           'CoupCoupon Project', 
           'This project is a full-stack web application that integrates a React TypeScript frontend with a Java Spring backend and uses MySQL for data storage. The application is designed to provide a seamless user experience with efficient data management and robust backend support.',
-          '["React", "TypeScript", "Java", "Spring", "MySQL"]', 
-          '/Coupon.png',
-          'https://github.com/yourusername/ecommerce'
+          '["Java Spring", "React", "MySQL", "TypeScript", "JWT", "RestAPI"]', 
+          '/coupcoupon-landing.png',
+          'https://github.com/yourusername/coupcoupon',
+          'https://coupcoupon.repl.co'
         )
       `).run();
+      */
       
       console.log('Adding your skills data...');
       // Frontend skills
@@ -175,7 +228,7 @@ export const setupDevDb = async () => {
     console.error('Error setting up development database:', err);
     throw err;
   }
-};
+}
 
 // Handle cleanup
 process.on('SIGINT', () => {

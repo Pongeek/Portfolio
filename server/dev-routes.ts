@@ -172,7 +172,32 @@ export function registerDevRoutes(app: Express) {
   // Projects
   app.get("/api/projects", async (req, res) => {
     try {
-      const projects = db.prepare('SELECT * FROM projects').all();
+      const dbProjects = db.prepare('SELECT * FROM projects').all();
+      
+      // Define the type for the database project
+      interface DbProject {
+        id: number;
+        title: string;
+        description: string;
+        technologies: string;
+        image_url: string;
+        live_url: string;
+        github_url: string;
+        created_at: string;
+      }
+      
+      // Map database column names to expected property names
+      const projects = dbProjects.map((project: DbProject) => ({
+        id: project.id,
+        title: project.title,
+        description: project.description,
+        technologies: JSON.parse(project.technologies),
+        imageUrl: project.image_url,
+        liveUrl: project.live_url,
+        githubUrl: project.github_url,
+        createdAt: project.created_at
+      }));
+      
       res.json(projects || []);
     } catch (error) {
       console.error("Error fetching projects:", error);
