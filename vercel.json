@@ -1,10 +1,5 @@
 {
   "version": 2,
-  "functions": {
-    "api/**/*": {
-      "memory": 1024
-    }
-  },
   "routes": [
     { "src": "/api/projects", "dest": "/api/projects.ts" },
     { "src": "/api/contact", "dest": "/api/contact.ts" },
@@ -12,6 +7,6 @@
   ],
   "builds": [
     { "src": "client/**/*", "use": "@vercel/static" },
-    { "src": "api/**/*", "use": "@vercel/node" }
+    { "src": "api/**/*", "use": "@vercel/node@2.8.2" }
   ]
 } 
