@@ -166,9 +166,8 @@ export default function HomePage() {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <FileText className="h-4 w-4" />
                   <a
-                    href="/api/download-cv"
+                    href="/api/serve?type=download&path=Max%20Mullokandov%20CV.pdf"
                     className="mt-8 inline-flex items-center gap-x-2 rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    download
                   >
                     <FiDownload className="h-4 w-4" />
                     Download Resume
