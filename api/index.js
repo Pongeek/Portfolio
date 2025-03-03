@@ -272,27 +272,43 @@ async function handleContact(req, res) {
     return res.status(400).json({ error: 'Name, email, and message are required' });
   }
 
-  console.log('Contact form submission received:');
+  // Detailed logging for debugging
+  console.log('=============== CONTACT FORM SUBMISSION ===============');
   console.log('Name:', name);
   console.log('Email:', email);
   console.log('Message:', message);
+  
+  // Check SendGrid configuration
+  const hasApiKey = !!process.env.SENDGRID_API_KEY;
+  const hasFromEmail = !!process.env.SENDGRID_FROM_EMAIL;
+  
+  console.log('SendGrid API Key configured:', hasApiKey);
+  console.log('SendGrid FROM Email configured:', hasFromEmail);
+  
+  if (hasApiKey) {
+    console.log('API Key starts with:', process.env.SENDGRID_API_KEY.substring(0, 5) + '...');
+  }
 
-  // Check if SendGrid API key is configured
   if (!process.env.SENDGRID_API_KEY) {
-    console.log('SendGrid API key not configured, but accepting the form submission anyway');
-    // Return success even without SendGrid configured
+    console.log('ERROR: SendGrid API key is missing. Cannot send email.');
     return res.status(200).json({ 
       message: 'Message received successfully',
-      note: 'Email delivery is currently disabled, but your message has been logged.' 
+      note: 'Email delivery is currently disabled (missing API key), but your message has been logged.' 
     });
   }
 
   try {
+    // Configure SendGrid
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    
+    const fromEmail = process.env.SENDGRID_FROM_EMAIL || 'portfolio@example.com';
+    
+    console.log('Using FROM email:', fromEmail);
+    console.log('Sending TO email: MaximPim95@gmail.com');
 
     const msg = {
       to: 'MaximPim95@gmail.com',
-      from: process.env.SENDGRID_FROM_EMAIL || 'portfolio@example.com',
+      from: fromEmail,
       subject: `Portfolio Contact Form: Message from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
       html: `
@@ -304,10 +320,20 @@ async function handleContact(req, res) {
       `
     };
 
+    // Send the email
+    console.log('Attempting to send email via SendGrid...');
     await sgMail.send(msg);
+    console.log('Email sent successfully!');
+    
     return res.status(200).json({ message: 'Email sent successfully' });
   } catch (error) {
-    console.error('SendGrid Error:', error);
+    console.error('=============== SENDGRID ERROR ===============');
+    console.error(error);
+    
+    if (error.response) {
+      console.error('Error body:', error.response.body);
+    }
+    
     // Return success even if SendGrid fails
     return res.status(200).json({ 
       message: 'Message received successfully',
