@@ -165,8 +165,8 @@ export default function HomePage() {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <FileText className="h-4 w-4" />
                   <a 
-                    href="/download-cv.html" 
-                    target="_blank"
+                    href="/Max Mullokandov CV.pdf" 
+                    download="Max Mullokandov CV.pdf"
                     className="hover:text-primary transition-colors"
                   >
                     Download Resume
