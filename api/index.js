@@ -27,6 +27,18 @@ export default async function handler(req, res) {
     const { default: skillsHandler } = await import('./skills');
     return skillsHandler(req, res);
   }
+  
+  if (pathSegment === 'serve-image') {
+    // Import the image serving API handler dynamically
+    const { default: serveImageHandler } = await import('./serve-image');
+    return serveImageHandler(req, res);
+  }
+  
+  if (pathSegment === 'serve-cv') {
+    // Import the CV serving API handler dynamically
+    const { default: serveCvHandler } = await import('./serve-cv');
+    return serveCvHandler(req, res);
+  }
 
   // If no route matches
   return res.status(404).json({ error: 'API endpoint not found' });
