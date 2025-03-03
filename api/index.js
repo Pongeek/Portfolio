@@ -1,9 +1,14 @@
-const fs = require('fs');
-const path = require('path');
-const sgMail = require('@sendgrid/mail');
+import fs from 'fs';
+import path from 'path';
+import sgMail from '@sendgrid/mail';
+import { fileURLToPath } from 'url';
+
+// Get directory name equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Universal API handler - replaces all other API endpoints
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // Enable CORS for all requests
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -79,7 +84,7 @@ module.exports = async (req, res) => {
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
-};
+}
 
 // Root handler - used when no specific action is requested
 function rootHandler(req, res) {
@@ -251,11 +256,11 @@ function handleProfile(req, res) {
     name: "Max Mullokandov",
     title: "Full Stack Developer",
     bio: "Experienced developer passionate about creating clean, efficient code and solving complex problems.",
-    location: "Beit Dagan, Israel",
+    location: "New York, NY",
     email: "MaximPim95@gmail.com",
     social: {
       github: "https://github.com/Pongeek",
-      linkedin: "https://www.linkedin.com/in/maxim-mullokandov/"
+      linkedin: "https://linkedin.com/in/maxmullokandov"
     }
   });
 }
@@ -321,7 +326,6 @@ async function handleContact(req, res) {
     try {
       // Only try to use SendGrid if we have an API key
       if (hasApiKey) {
-        const sgMail = require('@sendgrid/mail');
         sgMail.setApiKey(process.env.SENDGRID_API_KEY);
         
         const fromEmail = process.env.SENDGRID_FROM_EMAIL || 'portfolio@example.com';
@@ -408,8 +412,8 @@ function handleCVDownload(req, res) {
     console.log('CV download requested');
     
     const publicDir = path.join(process.cwd(), 'public');
-    const cvFileName = 'Max Mullokandov CV.pdf';
-    const cvPath = path.join(publicDir, cvFileName);
+    let cvFileName = 'Max Mullokandov CV.pdf';
+    let cvPath = path.join(publicDir, cvFileName);
     
     // Check if the CV exists
     if (!fs.existsSync(cvPath)) {

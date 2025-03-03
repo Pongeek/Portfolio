@@ -1,0 +1,11 @@
+{
+  "name": "portfolio-api",
+  "version": "1.0.0",
+  "description": "Portfolio API endpoints",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
+    "portfolio-api": "file:"
+  }
+}
