@@ -166,10 +166,15 @@ export default function HomePage() {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <FileText className="h-4 w-4" />
                   <a
-                    href="/api/serve?type=download&path=Max%20Mullokandov%20CV.pdf"
-                    className="mt-8 inline-flex items-center gap-x-2 rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    href="/Max Mullokandov CV.pdf"
+                    className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                    download
                   >
-                    <FiDownload className="h-4 w-4" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
                     Download Resume
                   </a>
                 </div>

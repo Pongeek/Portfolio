@@ -1,29 +1,46 @@
 import { QueryClient } from "@tanstack/react-query";
+import { type Message } from "@db/schema";
 
 const API_BASE = "/api";
 
 async function handleResponse(response: Response) {
   if (!response.ok) {
-    const error = await response.text();
-    throw new Error(error || response.statusText);
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || "An error occurred while fetching data");
   }
   return response.json();
 }
 
 async function apiRequest(endpoint: string, options?: RequestInit) {
-  const response = await fetch(`${API_BASE}${endpoint}`, {
+  const url = `${API_BASE}${endpoint}`;
+  const response = await fetch(url, {
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...options?.headers,
     },
-    credentials: 'include',
   });
   return handleResponse(response);
 }
 
 export async function fetchProjects() {
-  return apiRequest('/projects');
+  try {
+    const response = await fetch('/api/projects');
+    if (!response.ok) {
+      console.error("Fallback to handler endpoint");
+      const handlerResponse = await fetch('/api/handler?action=projects');
+      if (!handlerResponse.ok) {
+        throw new Error('Failed to fetch projects');
+      }
+      const data = await handlerResponse.json();
+      return data.projects;
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+    return [];
+  }
 }
 
 export async function fetchSkills() {
@@ -39,10 +56,29 @@ export async function submitContact(data: {
   email: string;
   message: string;
 }) {
-  return apiRequest('/contact', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  });
+  try {
+    const response = await fetch('/api/handler?action=contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    
+    if (!response.ok) {
+      // Try fallback to original endpoint
+      console.log("Trying fallback to original contact endpoint");
+      return apiRequest('/contact', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    }
+    
+    return response.json();
+  } catch (error) {
+    console.error("Error submitting contact:", error);
+    throw new Error("Failed to send message. Please try again.");
+  }
 }
 
 export async function login(username: string, password: string) {
@@ -62,12 +98,8 @@ export async function logout() {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
-      staleTime: 5 * 60 * 1000, // 5 minutes
       refetchOnWindowFocus: false,
-    },
-    mutations: {
-      retry: 1,
+      staleTime: 1000 * 60 * 5, // 5 minutes
     },
   },
 });
