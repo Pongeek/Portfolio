@@ -7,7 +7,6 @@
     { "source": "/api/projects", "destination": "/api/projects" },
     { "source": "/api/contact", "destination": "/api/contact" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/(.+\\..+)", "destination": "/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 } 
