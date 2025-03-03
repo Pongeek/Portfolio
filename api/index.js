@@ -181,32 +181,32 @@ function handleProjects(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
   
-  // Return projects data
+  // Updated projects data with new descriptions and technologies
   return res.status(200).json([
     {
       id: 1,
       title: "Portfolio Website",
-      description: "Personal portfolio website built with React, Tailwind CSS, and Next.js",
+      description: "A modern portfolio website built with ReactJS, Express, and PostgreSQL.",
       imageUrl: "/portfolio-preview.png",
-      technologies: ["React", "Next.js", "Tailwind CSS", "SendGrid"],
+      technologies: ["React", "Next.js", "Tailwind CSS", "PostgreSQL", "Express"],
       githubUrl: "https://github.com/yourusername/portfolio",
       liveUrl: ""
     },
     {
       id: 2,
-      title: "CoupCoupon",
-      description: "A coupon management system that helps users find and manage the best deals",
+      title: "CoupCoupon Project",
+      description: "A comprehensive platform for managing coupons and deals, featuring role-based access control for admins, companies, and customers. Built with modern web technologies. This platform enables admins to manage users and deals, companies to create and track coupons, and customers to find and redeem offers.",
       imageUrl: "/Coupon.png",
-      technologies: ["React", "Node.js", "MongoDB", "Express"],
+      technologies: ["Java Spring", "React", "MySQL", "TypeScript", "JWT", "RESTful API"],
       githubUrl: "https://github.com/yourusername/coupcoupon",
       liveUrl: ""
     },
     {
       id: 3,
-      title: "Billiard Project",
-      description: "Interactive billiards simulation developed with JavaScript and Canvas",
+      title: "Billiard Game",
+      description: "An interactive billiard game implemented in Squeak Smalltalk, featuring realistic physics, collision detection, and an intuitive user interface. Players can aim and shoot using mouse controls, with the game automatically handling ball movements, collisions, and game rules.",
       imageUrl: "/billiardTable.png",
-      technologies: ["JavaScript", "Canvas", "HTML5", "CSS3"],
+      technologies: ["Squeak Smalltalk", "Object-Oriented Programming", "Physics Simulation", "UI Design", "Game Development"],
       githubUrl: "https://github.com/yourusername/billiard-project",
       liveUrl: ""
     }
@@ -219,18 +219,24 @@ function handleSkills(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
   
-  // Example skills data
+  // Updated skills data based on user requirements
   return res.status(200).json([
-    { id: 1, name: "React", category: "Frontend", level: 90 },
-    { id: 2, name: "Next.js", category: "Frontend", level: 85 },
-    { id: 3, name: "TypeScript", category: "Languages", level: 80 },
-    { id: 4, name: "Node.js", category: "Backend", level: 85 },
-    { id: 5, name: "Express", category: "Backend", level: 80 },
-    { id: 6, name: "MongoDB", category: "Database", level: 75 },
-    { id: 7, name: "PostgreSQL", category: "Database", level: 70 },
-    { id: 8, name: "Tailwind CSS", category: "Frontend", level: 90 },
-    { id: 9, name: "Docker", category: "DevOps", level: 65 },
-    { id: 10, name: "AWS", category: "DevOps", level: 60 }
+    { id: 1, name: "JavaScript", category: "Frontend", level: 90 },
+    { id: 2, name: "TypeScript", category: "Frontend", level: 85 },
+    { id: 3, name: "React", category: "Frontend", level: 95 },
+    { id: 4, name: "HTML/CSS", category: "Frontend", level: 90 },
+    { id: 5, name: "Tailwind CSS", category: "Frontend", level: 85 },
+    { id: 6, name: "Node.js", category: "Backend", level: 80 },
+    { id: 7, name: "Java", category: "Backend", level: 75 },
+    { id: 8, name: "Spring Framework", category: "Backend", level: 70 },
+    { id: 9, name: "Python", category: "Backend", level: 75 },
+    { id: 10, name: "MySQL", category: "Database", level: 85 },
+    { id: 11, name: "PostgreSQL", category: "Database", level: 80 },
+    { id: 12, name: "MongoDB", category: "Database", level: 75 },
+    { id: 13, name: "GitHub", category: "Tools", level: 90 },
+    { id: 14, name: "RESTful API", category: "Tools", level: 85 },
+    { id: 15, name: "JWT", category: "Tools", level: 80 },
+    { id: 16, name: "Docker", category: "DevOps", level: 70 }
   ]);
 }
 
