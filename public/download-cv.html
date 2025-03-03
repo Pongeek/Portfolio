@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloading CV...</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        p {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4a6cf7;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #3451b2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Download is Starting</h1>
+        <p>If your download doesn't start automatically, please click the button below:</p>
+        <a href="/Max Mullokandov CV.pdf" download="Max Mullokandov CV.pdf" class="button" id="download-button">Download CV</a>
+    </div>
+
+    <script>
+        // Automatically trigger the download when the page loads
+        window.onload = function() {
+            // Create a direct download link
+            const link = document.createElement('a');
+            link.href = '/Max Mullokandov CV.pdf';
+            link.download = 'Max Mullokandov CV.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Also set up the manual download button
+            document.getElementById('download-button').addEventListener('click', function(e) {
+                // This is a backup in case the automatic download doesn't work
+                setTimeout(function() {
+                    window.location.href = '/';
+                }, 2000);
+            });
+        };
+    </script>
+</body>
+</html> 

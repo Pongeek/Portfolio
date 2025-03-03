@@ -4,12 +4,14 @@ export default function handler(req, res) {
   }
 
   try {
-    // Get base URL for images and assets
+    // Get base URL for static files
     const baseUrl = process.env.VERCEL_URL 
       ? `https://${process.env.VERCEL_URL}` 
       : process.env.NODE_ENV === 'development' 
         ? 'http://localhost:3000'
         : '';
+        
+    console.log('Using base URL for profile:', baseUrl);
         
     // Profile data
     const profile = {
@@ -20,7 +22,11 @@ export default function handler(req, res) {
       email: "contact@example.com",
       github: "https://github.com/Pongeek",
       linkedin: "https://linkedin.com/in/example",
-      resume: `${baseUrl}/api/serve-cv`,
+      // Direct URL to the PDF file in the public directory
+      resume: `${baseUrl}/Max%20Mullokandov%20CV.pdf`,
+      // Include a download attribute hint for the frontend
+      resumeDownload: true,
+      resumeFilename: "Max Mullokandov CV.pdf",
       experience: [
         {
           title: "Senior Developer",
