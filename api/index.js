@@ -3,6 +3,9 @@ export default async function handler(req, res) {
   // Handle different routes based on path
   const pathSegment = req.query.path || '';
   
+  // Log the requested path for debugging
+  console.log('API route requested:', pathSegment);
+  
   // Forward to the appropriate standalone API file
   if (pathSegment === 'projects') {
     // Import the projects API handler dynamically
@@ -39,7 +42,13 @@ export default async function handler(req, res) {
     const { default: serveCvHandler } = await import('./serve-cv');
     return serveCvHandler(req, res);
   }
+  
+  if (pathSegment === 'file-list') {
+    // Import the file listing API handler dynamically
+    const { default: fileListHandler } = await import('./file-list');
+    return fileListHandler(req, res);
+  }
 
   // If no route matches
-  return res.status(404).json({ error: 'API endpoint not found' });
+  return res.status(404).json({ error: 'API endpoint not found', requestedPath: pathSegment });
 } 

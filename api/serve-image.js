@@ -10,12 +10,15 @@ export default function handler(req, res) {
     // Get the image name from the query parameter
     const { name } = req.query;
     
+    console.log('Image name requested:', name);
+    
     if (!name) {
       return res.status(400).json({ error: 'Image name is required' });
     }
     
     // Sanitize the filename to prevent directory traversal attacks
     const sanitizedName = name.replace(/\.\./g, '').replace(/[/\\]/g, '');
+    console.log('Sanitized name:', sanitizedName);
     
     // Determine content type based on file extension
     const ext = path.extname(sanitizedName).toLowerCase();
@@ -33,8 +36,15 @@ export default function handler(req, res) {
       contentType = 'image/svg+xml';
     }
     
+    console.log('Content type:', contentType);
+    
     // Path to the image in the public directory
     const imagePath = path.join(process.cwd(), 'public', sanitizedName);
+    console.log('Looking for image at path:', imagePath);
+    
+    // List all files in the public directory for debugging
+    const publicFiles = fs.readdirSync(path.join(process.cwd(), 'public'));
+    console.log('Files in public directory:', publicFiles);
     
     // Check if the file exists
     if (!fs.existsSync(imagePath)) {

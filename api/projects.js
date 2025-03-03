@@ -11,6 +11,18 @@ export default function handler(req, res) {
         ? 'http://localhost:3000'
         : '';
     
+    console.log('Using base URL for projects:', baseUrl);
+    
+    // Try multiple possible image names for the coupon project
+    const couponImageOptions = [
+      `${baseUrl}/api/serve-image?name=Coupon.png`,
+      `${baseUrl}/api/serve-image?name=coupon.png`,
+      `${baseUrl}/api/serve-image?name=CoupCoupon.png`,
+      `${baseUrl}/api/serve-image?name=coupcoupon.png`,
+      // Fallback to a direct URL if the API approach doesn't work
+      `${baseUrl}/Coupon.png` 
+    ];
+    
     // Default projects data
     const projects = [
       {
@@ -27,7 +39,8 @@ export default function handler(req, res) {
         title: "CoupCoupon",
         description: "A comprehensive platform for managing coupons and deals, featuring role-based access control for admins, companies, and customers. Built with modern web technologies. This platform enables admins to manage users and deals, companies to create and track coupons, and customers to find and redeem offers.",
         technologies: ["Java Spring", "React", "MySQL", "TypeScript", "JWT", "RestAPI"],
-        imageUrl: `${baseUrl}/api/serve-image?name=Coupon.png`,
+        imageUrl: couponImageOptions[0], // Using the first option, client-side code can try others if this fails
+        couponImageOptions: couponImageOptions, // Providing all options to the client
         githubUrl: "https://github.com/Pongeek/CoupCoupon-client",
         liveUrl: ""
       },
