@@ -5,11 +5,9 @@
   "installCommand": "npm install",
   "rewrites": [
     { "source": "/api/projects", "destination": "/api/projects" },
-    { "source": "/api/contact", "destination": "/api/contact" }
-  ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|svg|pdf|webp)$)", "dest": "/$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "source": "/api/contact", "destination": "/api/contact" },
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*\\.(js|css|ico|png|jpg|jpeg|svg|pdf|webp))", "destination": "/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 } 
