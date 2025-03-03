@@ -9,29 +9,29 @@ export default function handler(req, res) {
       {
         id: 1,
         title: "Portfolio Website",
-        description: "A modern portfolio website built with React, Express, and PostgreSQL",
+        description: "A modern portfolio website built with React, Express, and PostgreSQL.",
         technologies: ["React", "TypeScript", "Express", "PostgreSQL", "Tailwind CSS"],
-        imageUrl: "/images/portfolio.webp",
+        imageUrl: "/EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png",
         github: "https://github.com/Pongeek/Portfolio",
         liveUrl: "https://portfolio-two-eta-38.vercel.app/"
       },
       {
         id: 2,
-        title: "E-commerce Platform",
-        description: "Full-featured e-commerce platform with product listings, cart, and checkout functionality",
-        technologies: ["React", "Node.js", "MongoDB", "Express", "Redux"],
-        imageUrl: "/images/ecommerce.webp",
-        github: "https://github.com/example/ecommerce",
-        liveUrl: "https://example-ecommerce.com"
+        title: "CoupCoupon",
+        description: "A comprehensive platform for managing coupons and deals, featuring role-based access control for admins, companies, and customers. Built with modern web technologies. This platform enables admins to manage users and deals, companies to create and track coupons, and customers to find and redeem offers.",
+        technologies: ["Java Spring", "React", "MySQL", "TypeScript", "JWT", "RestAPI"],
+        imageUrl: "/coupcoupon-landing.png",
+        github: "https://github.com/username/coupcoupon",
+        liveUrl: "https://coupcoupon.com"
       },
       {
         id: 3,
-        title: "Task Management App",
-        description: "Collaborative task management application with real-time updates",
-        technologies: ["React", "Firebase", "Material UI", "Redux"],
-        imageUrl: "/images/taskapp.webp",
-        github: "https://github.com/example/taskapp",
-        liveUrl: "https://example-taskapp.com"
+        title: "Billiard Game - Squeak Smalltalk",
+        description: "An interactive billiard game implemented in Squeak Smalltalk, featuring realistic physics, collision detection, and an intuitive user interface. Players can aim and shoot using mouse controls, with the game automatically handling ball movements, collisions, and game rules.",
+        technologies: ["Squeak Smalltalk", "Object-Oriented Programming", "Physics Simulation", "UI Design", "Game Development"],
+        imageUrl: "/billiardTable.png",
+        github: "https://github.com/username/billiard-game",
+        liveUrl: "https://squeak-billiard.com"
       }
     ];
 
