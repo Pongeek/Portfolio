@@ -17,13 +17,13 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "client", "src"),
+      "@": path.resolve(__dirname, "./client/src"),
       "@db": path.resolve(__dirname, "db"),
     },
   },
-  root: path.resolve(__dirname, "client"),
+  root: "client",
   build: {
-    outDir: path.resolve(__dirname, "dist/public"),
+    outDir: "../dist",
     emptyOutDir: true,
   },
 });
