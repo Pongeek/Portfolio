@@ -34,6 +34,10 @@ module.exports = async (req, res) => {
       case 'serve':
         return handleFileServing(req, res, url.searchParams);
         
+      // Direct CV download
+      case 'download-cv':
+        return handleCVDownload(req, res);
+        
       // Projects data
       case 'projects':
         return handleProjects(req, res);
@@ -122,10 +126,24 @@ async function handleFileServing(req, res, params) {
     
     fullPath = variations.find(p => fs.existsSync(p));
     if (!fullPath) {
+      console.error(`File not found: ${fullPath}`);
+      console.log('Looking for:', filePath);
+      console.log('Public dir:', publicDir);
+      console.log('Attempted paths:', variations);
+      
+      // List files in public directory for debugging
+      try {
+        const files = fs.readdirSync(publicDir);
+        console.log('Files in public dir:', files);
+      } catch (err) {
+        console.error('Error reading public dir:', err);
+      }
+      
       return res.status(404).json({ error: 'File not found' });
     }
   }
 
+  console.log(`Serving file: ${fullPath}`);
   const fileBuffer = fs.readFileSync(fullPath);
   const stats = fs.statSync(fullPath);
   const ext = path.extname(fullPath).toLowerCase();
@@ -146,7 +164,9 @@ async function handleFileServing(req, res, params) {
   if (type === 'image') {
     res.setHeader('Cache-Control', 'public, max-age=3600');
   } else if (type === 'download') {
-    res.setHeader('Content-Disposition', `attachment; filename="${path.basename(fullPath)}"`);
+    // Set download headers for better file downloads
+    const filename = encodeURIComponent(path.basename(fullPath));
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
@@ -310,4 +330,68 @@ function handleLogout(req, res) {
   
   // In a real app, you'd invalidate tokens or sessions
   return res.status(200).json({ message: 'Logged out successfully' });
+}
+
+// Direct CV download handler
+function handleCVDownload(req, res) {
+  try {
+    console.log('CV download requested');
+    
+    const publicDir = path.join(process.cwd(), 'public');
+    const cvFileName = 'Max Mullokandov CV.pdf';
+    const cvPath = path.join(publicDir, cvFileName);
+    
+    // Check if the CV exists
+    if (!fs.existsSync(cvPath)) {
+      console.error('CV file not found at path:', cvPath);
+      
+      // Try alternate filenames
+      const possibleNames = [
+        'Max Mullokandov CV.pdf',
+        'Max_Mullokandov_CV.pdf',
+        'MaxMullokandovCV.pdf',
+        'resume.pdf',
+        'CV.pdf'
+      ];
+      
+      let foundPath = null;
+      for (const name of possibleNames) {
+        const testPath = path.join(publicDir, name);
+        if (fs.existsSync(testPath)) {
+          foundPath = testPath;
+          console.log('Found CV at alternate path:', testPath);
+          break;
+        }
+      }
+      
+      if (!foundPath) {
+        // List files in public directory to debug
+        const files = fs.readdirSync(publicDir);
+        console.log('Files in public directory:', files);
+        
+        return res.status(404).send('CV file not found');
+      }
+      
+      // Use the found path
+      cvPath = foundPath;
+    }
+    
+    // Read the CV file
+    const cvBuffer = fs.readFileSync(cvPath);
+    const stats = fs.statSync(cvPath);
+    
+    // Set appropriate headers for download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Length', stats.size);
+    res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(path.basename(cvPath))}"`);
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    
+    // Send the file
+    return res.status(200).send(cvBuffer);
+  } catch (error) {
+    console.error('Error serving CV:', error);
+    return res.status(500).json({ error: 'Failed to serve CV', message: error.message });
+  }
 }
