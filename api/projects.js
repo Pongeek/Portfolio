@@ -20,18 +20,18 @@ export default function handler(req, res) {
         title: "CoupCoupon",
         description: "A comprehensive platform for managing coupons and deals, featuring role-based access control for admins, companies, and customers. Built with modern web technologies. This platform enables admins to manage users and deals, companies to create and track coupons, and customers to find and redeem offers.",
         technologies: ["Java Spring", "React", "MySQL", "TypeScript", "JWT", "RestAPI"],
-        imageUrl: "/coupcoupon-landing.png",
+        imageUrl: "https://via.placeholder.com/400x300/3498db/ffffff?text=CoupCoupon",
         github: "https://github.com/username/coupcoupon",
-        liveUrl: "https://coupcoupon.com"
+        liveUrl: ""
       },
       {
         id: 3,
         title: "Billiard Game - Squeak Smalltalk",
         description: "An interactive billiard game implemented in Squeak Smalltalk, featuring realistic physics, collision detection, and an intuitive user interface. Players can aim and shoot using mouse controls, with the game automatically handling ball movements, collisions, and game rules.",
         technologies: ["Squeak Smalltalk", "Object-Oriented Programming", "Physics Simulation", "UI Design", "Game Development"],
-        imageUrl: "/billiardTable.png",
+        imageUrl: "https://via.placeholder.com/400x300/27ae60/ffffff?text=Billiard+Game",
         github: "https://github.com/username/billiard-game",
-        liveUrl: "https://squeak-billiard.com"
+        liveUrl: ""
       }
     ];
 
