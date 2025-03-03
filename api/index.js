@@ -25,7 +25,13 @@ export default async function handler(req, res) {
     const pathSegments = url.pathname.split('/').filter(Boolean);
     
     // Extract action from either path or query
-    let action = pathSegments[0] || url.searchParams.get('action');
+    let action = pathSegments[1] || url.searchParams.get('action');
+    
+    // If we accessed directly as /api/contact instead of /api/index/contact,
+    // we need to check the last segment
+    if (!action && pathSegments.length > 0) {
+      action = pathSegments[pathSegments.length - 1];
+    }
     
     // If the action includes .js, remove it (happens when accessing /api/something.js directly)
     if (action && action.endsWith('.js')) {
@@ -33,6 +39,18 @@ export default async function handler(req, res) {
     }
     
     console.log(`API Request: ${req.method} ${req.url}, Action: ${action}`);
+    console.log('Path segments:', pathSegments);
+    console.log('Query params:', Object.fromEntries(url.searchParams));
+    console.log('Request body:', req.body);
+
+    // Special case for contact form - detect based on path or body content
+    if (action === 'contact' || 
+        pathSegments.includes('contact') || 
+        (req.method === 'POST' && req.body && 
+         (req.body.name !== undefined && req.body.email !== undefined && req.body.message !== undefined))) {
+      console.log('Detected contact form submission');
+      return handleContact(req, res);
+    }
 
     switch (action) {
       // File serving (images and downloads)
@@ -55,13 +73,9 @@ export default async function handler(req, res) {
       case 'profile':
         return handleProfile(req, res);
         
-      // Contact form submission  
-      case 'contact':
-        return handleContact(req, res);
-        
       // Auth endpoints
       case 'auth':
-        const authAction = pathSegments[1];
+        const authAction = pathSegments[2];
         if (authAction === 'login') {
           return handleLogin(req, res);
         } else if (authAction === 'logout') {
@@ -272,19 +286,58 @@ async function handleContact(req, res) {
       return res.status(405).json({ error: 'Method not allowed' });
     }
 
+    console.log('Processing contact form submission');
+    console.log('Request content type:', req.headers['content-type']);
+    
     // Check if body exists and can be parsed
-    if (!req.body) {
-      console.log('No request body found');
+    let body = req.body;
+    
+    // If the body is a string (happens sometimes with raw POSTs), try to parse it
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+        console.log('Parsed request body from string:', body);
+      } catch (e) {
+        console.error('Failed to parse body string as JSON:', e);
+      }
+    } else if (!body) {
+      console.log('No request body found, attempting to read from raw stream');
+      try {
+        // Read body from raw request in chunks
+        const chunks = [];
+        for await (const chunk of req) {
+          chunks.push(chunk);
+        }
+        const data = Buffer.concat(chunks).toString();
+        if (data) {
+          try {
+            body = JSON.parse(data);
+            console.log('Parsed body from raw request:', body);
+          } catch (e) {
+            console.error('Failed to parse raw body as JSON:', e);
+          }
+        }
+      } catch (e) {
+        console.error('Error reading raw request body:', e);
+      }
+    }
+    
+    if (!body) {
+      console.log('No request body could be parsed');
       return res.status(200).json({ 
         message: 'Message received successfully',
         note: 'No message content was provided.'
       });
     }
-
-    const { name, email, message } = req.body;
+    
+    // Try to extract fields from various possible locations
+    const name = body.name;
+    const email = body.email;
+    const message = body.message;
 
     if (!name || !email || !message) {
       console.log('Missing required fields in contact form submission');
+      console.log('Body contents:', body);
       return res.status(200).json({ 
         message: 'Message received successfully',
         note: 'Some required fields were missing, but we recorded what was provided.'
