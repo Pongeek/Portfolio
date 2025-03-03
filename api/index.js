@@ -1,54 +1,313 @@
-// This is the main API handler for Vercel serverless environment
-export default async function handler(req, res) {
-  // Handle different routes based on path
-  const pathSegment = req.query.path || '';
+const fs = require('fs');
+const path = require('path');
+const sgMail = require('@sendgrid/mail');
+
+// Universal API handler - replaces all other API endpoints
+module.exports = async (req, res) => {
+  // Enable CORS for all requests
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
-  // Log the requested path for debugging
-  console.log('API route requested:', pathSegment);
-  
-  // Forward to the appropriate standalone API file
-  if (pathSegment === 'projects') {
-    // Import the projects API handler dynamically
-    const { default: projectsHandler } = await import('./projects');
-    return projectsHandler(req, res);
-  }
-  
-  if (pathSegment === 'contact') {
-    // Import the contact API handler dynamically
-    const { default: contactHandler } = await import('./contact');
-    return contactHandler(req, res);
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
 
-  if (pathSegment === 'profile') {
-    // Import the profile API handler dynamically
-    const { default: profileHandler } = await import('./profile');
-    return profileHandler(req, res);
+  try {
+    // Get the requested action from the path or query parameter
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const pathSegments = url.pathname.split('/').filter(Boolean);
+    
+    // Extract action from either path or query
+    let action = pathSegments[0] || url.searchParams.get('action');
+    
+    // If the action includes .js, remove it (happens when accessing /api/something.js directly)
+    if (action && action.endsWith('.js')) {
+      action = action.slice(0, -3);
+    }
+    
+    console.log(`API Request: ${req.method} ${req.url}, Action: ${action}`);
+
+    switch (action) {
+      // File serving (images and downloads)
+      case 'serve':
+        return handleFileServing(req, res, url.searchParams);
+        
+      // Projects data
+      case 'projects':
+        return handleProjects(req, res);
+        
+      // Skills data  
+      case 'skills':
+        return handleSkills(req, res);
+        
+      // Profile data
+      case 'profile':
+        return handleProfile(req, res);
+        
+      // Contact form submission  
+      case 'contact':
+        return handleContact(req, res);
+        
+      // Auth endpoints
+      case 'auth':
+        const authAction = pathSegments[1];
+        if (authAction === 'login') {
+          return handleLogin(req, res);
+        } else if (authAction === 'logout') {
+          return handleLogout(req, res);
+        }
+        return res.status(404).json({ error: 'Auth endpoint not found' });
+        
+      // Default to root handler
+      default:
+        if (!action) {
+          return rootHandler(req, res);
+        }
+        return res.status(404).json({ error: 'API endpoint not found' });
+    }
+  } catch (error) {
+    console.error('API Error:', error);
+    return res.status(500).json({ 
+      error: 'Internal server error', 
+      message: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+};
+
+// Root handler - used when no specific action is requested
+function rootHandler(req, res) {
+  return res.status(200).json({
+    message: 'API is running',
+    endpoints: [
+      '/api/projects',
+      '/api/skills',
+      '/api/profile',
+      '/api/contact',
+      '/api/auth/login',
+      '/api/auth/logout',
+      '/api/serve'
+    ],
+    timestamp: new Date().toISOString()
+  });
+}
+
+// File serving handler
+async function handleFileServing(req, res, params) {
+  const type = params.get('type');
+  const filePath = params.get('path');
+  
+  if (!type || !filePath) {
+    return res.status(400).json({ error: 'Type and path parameters are required' });
   }
 
-  if (pathSegment === 'skills') {
-    // Import the skills API handler dynamically
-    const { default: skillsHandler } = await import('./skills');
-    return skillsHandler(req, res);
-  }
-  
-  if (pathSegment === 'serve-image') {
-    // Import the image serving API handler dynamically
-    const { default: serveImageHandler } = await import('./serve-image');
-    return serveImageHandler(req, res);
-  }
-  
-  if (pathSegment === 'serve-cv') {
-    // Import the CV serving API handler dynamically
-    const { default: serveCvHandler } = await import('./serve-cv');
-    return serveCvHandler(req, res);
-  }
-  
-  if (pathSegment === 'file-list') {
-    // Import the file listing API handler dynamically
-    const { default: fileListHandler } = await import('./file-list');
-    return fileListHandler(req, res);
+  // For security, validate the filename
+  if (filePath.includes('..')) {
+    return res.status(400).json({ error: 'Invalid file path' });
   }
 
-  // If no route matches
-  return res.status(404).json({ error: 'API endpoint not found', requestedPath: pathSegment });
-} 
+  const publicDir = path.join(process.cwd(), 'public');
+  let fullPath = path.join(publicDir, filePath);
+
+  // Check if file exists with variations
+  if (!fs.existsSync(fullPath)) {
+    const variations = [
+      fullPath,
+      path.join(publicDir, filePath.toLowerCase()),
+      path.join(publicDir, filePath.replace(/%20/g, ' ')),
+      path.join(publicDir, decodeURIComponent(filePath))
+    ];
+    
+    fullPath = variations.find(p => fs.existsSync(p));
+    if (!fullPath) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+  }
+
+  const fileBuffer = fs.readFileSync(fullPath);
+  const stats = fs.statSync(fullPath);
+  const ext = path.extname(fullPath).toLowerCase();
+
+  const mimeTypes = {
+    '.pdf': 'application/pdf',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.webp': 'image/webp'
+  };
+
+  res.setHeader('Content-Type', mimeTypes[ext] || 'application/octet-stream');
+  res.setHeader('Content-Length', stats.size);
+
+  if (type === 'image') {
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+  } else if (type === 'download') {
+    res.setHeader('Content-Disposition', `attachment; filename="${path.basename(fullPath)}"`);
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  }
+
+  return res.status(200).send(fileBuffer);
+}
+
+// Projects data handler
+function handleProjects(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  
+  // Return projects data
+  return res.status(200).json([
+    {
+      id: 1,
+      title: "Portfolio Website",
+      description: "Personal portfolio website built with React, Tailwind CSS, and Next.js",
+      imageUrl: "/portfolio-preview.png",
+      technologies: ["React", "Next.js", "Tailwind CSS", "SendGrid"],
+      githubUrl: "https://github.com/yourusername/portfolio",
+      liveUrl: ""
+    },
+    {
+      id: 2,
+      title: "CoupCoupon",
+      description: "A coupon management system that helps users find and manage the best deals",
+      imageUrl: "/Coupon.png",
+      technologies: ["React", "Node.js", "MongoDB", "Express"],
+      githubUrl: "https://github.com/yourusername/coupcoupon",
+      liveUrl: ""
+    },
+    {
+      id: 3,
+      title: "Billiard Project",
+      description: "Interactive billiards simulation developed with JavaScript and Canvas",
+      imageUrl: "/billiardTable.png",
+      technologies: ["JavaScript", "Canvas", "HTML5", "CSS3"],
+      githubUrl: "https://github.com/yourusername/billiard-project",
+      liveUrl: ""
+    }
+  ]);
+}
+
+// Skills data handler
+function handleSkills(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  
+  // Example skills data
+  return res.status(200).json([
+    { id: 1, name: "React", category: "Frontend", level: 90 },
+    { id: 2, name: "Next.js", category: "Frontend", level: 85 },
+    { id: 3, name: "TypeScript", category: "Languages", level: 80 },
+    { id: 4, name: "Node.js", category: "Backend", level: 85 },
+    { id: 5, name: "Express", category: "Backend", level: 80 },
+    { id: 6, name: "MongoDB", category: "Database", level: 75 },
+    { id: 7, name: "PostgreSQL", category: "Database", level: 70 },
+    { id: 8, name: "Tailwind CSS", category: "Frontend", level: 90 },
+    { id: 9, name: "Docker", category: "DevOps", level: 65 },
+    { id: 10, name: "AWS", category: "DevOps", level: 60 }
+  ]);
+}
+
+// Profile data handler
+function handleProfile(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  
+  // Example profile data
+  return res.status(200).json({
+    name: "Max Mullokandov",
+    title: "Full Stack Developer",
+    bio: "Experienced developer passionate about creating clean, efficient code and solving complex problems.",
+    location: "New York, NY",
+    email: "MaximPim95@gmail.com",
+    social: {
+      github: "https://github.com/yourusername",
+      linkedin: "https://linkedin.com/in/yourusername"
+    }
+  });
+}
+
+// Contact form handler
+async function handleContact(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: 'Name, email, and message are required' });
+  }
+
+  if (!process.env.SENDGRID_API_KEY) {
+    return res.status(500).json({ error: 'SendGrid API key is not configured' });
+  }
+
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+  const msg = {
+    to: 'MaximPim95@gmail.com',
+    from: process.env.SENDGRID_FROM_EMAIL || 'portfolio@example.com',
+    subject: `Portfolio Contact Form: Message from ${name}`,
+    text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    html: `
+      <h3>New message from portfolio contact form</h3>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Message:</strong></p>
+      <p>${message.replace(/\n/g, '<br>')}</p>
+    `
+  };
+
+  try {
+    await sgMail.send(msg);
+    return res.status(200).json({ message: 'Email sent successfully' });
+  } catch (error) {
+    console.error('SendGrid Error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to send email',
+      details: error.message
+    });
+  }
+}
+
+// Login handler
+function handleLogin(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  
+  // Example mock login (in a real app, you'd check credentials)
+  const { username, password } = req.body;
+  
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required' });
+  }
+  
+  // Simple mock auth (you would use proper auth in a real app)
+  if (username === 'admin' && password === 'password') {
+    return res.status(200).json({ 
+      user: { id: 1, username: 'admin', name: 'Admin User' },
+      token: 'mock-jwt-token' 
+    });
+  }
+  
+  return res.status(401).json({ error: 'Invalid credentials' });
+}
+
+// Logout handler
+function handleLogout(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  
+  // In a real app, you'd invalidate tokens or sessions
+  return res.status(200).json({ message: 'Logged out successfully' });
+}

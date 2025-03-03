@@ -1,5 +1,4 @@
 import { QueryClient } from "@tanstack/react-query";
-import { type Message } from "@db/schema";
 
 const API_BASE = "/api";
 
@@ -13,6 +12,7 @@ async function handleResponse(response: Response) {
 
 async function apiRequest(endpoint: string, options?: RequestInit) {
   const url = `${API_BASE}${endpoint}`;
+  console.log(`API Request: ${url}`, options);
   const response = await fetch(url, {
     ...options,
     headers: {
@@ -25,30 +25,42 @@ async function apiRequest(endpoint: string, options?: RequestInit) {
 
 export async function fetchProjects() {
   try {
-    const response = await fetch('/api/projects');
-    if (!response.ok) {
-      console.error("Fallback to handler endpoint");
-      const handlerResponse = await fetch('/api/handler?action=projects');
-      if (!handlerResponse.ok) {
-        throw new Error('Failed to fetch projects');
-      }
-      const data = await handlerResponse.json();
-      return data.projects;
-    }
-    const data = await response.json();
-    return data;
+    return await apiRequest('/projects');
   } catch (error) {
-    console.error("Error fetching projects:", error);
-    return [];
+    console.error('Error fetching projects:', error);
+    console.log('Trying index endpoint with projects action...');
+    const response = await fetch('/api/index?action=projects');
+    if (!response.ok) {
+      throw new Error('Failed to fetch projects');
+    }
+    return response.json();
   }
 }
 
 export async function fetchSkills() {
-  return apiRequest('/skills');
+  try {
+    return await apiRequest('/skills');
+  } catch (error) {
+    console.log('Trying index endpoint with skills action...');
+    const response = await fetch('/api/index?action=skills');
+    if (!response.ok) {
+      throw new Error('Failed to fetch skills');
+    }
+    return response.json();
+  }
 }
 
 export async function fetchProfile() {
-  return apiRequest('/profile');
+  try {
+    return await apiRequest('/profile');
+  } catch (error) {
+    console.log('Trying index endpoint with profile action...');
+    const response = await fetch('/api/index?action=profile');
+    if (!response.ok) {
+      throw new Error('Failed to fetch profile');
+    }
+    return response.json();
+  }
 }
 
 export async function submitContact(data: {
@@ -57,7 +69,13 @@ export async function submitContact(data: {
   message: string;
 }) {
   try {
-    const response = await fetch('/api/handler?action=contact', {
+    return await apiRequest('/contact', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  } catch (error) {
+    console.log('Trying index endpoint with contact action...');
+    const response = await fetch('/api/index?action=contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -66,35 +84,60 @@ export async function submitContact(data: {
     });
     
     if (!response.ok) {
-      // Try fallback to original endpoint
-      console.log("Trying fallback to original contact endpoint");
-      return apiRequest('/contact', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || 'Failed to send message');
     }
     
     return response.json();
-  } catch (error) {
-    console.error("Error submitting contact:", error);
-    throw new Error("Failed to send message. Please try again.");
   }
 }
 
 export async function login(username: string, password: string) {
-  return apiRequest('/auth/login', {
-    method: 'POST',
-    body: JSON.stringify({ username, password }),
-  });
+  try {
+    return await apiRequest('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password }),
+    });
+  } catch (error) {
+    console.log('Trying index endpoint with auth action...');
+    const response = await fetch('/api/index', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Invalid credentials');
+    }
+    
+    return response.json();
+  }
 }
 
 export async function logout() {
-  return apiRequest('/auth/logout', {
-    method: 'POST',
-  });
+  try {
+    return await apiRequest('/auth/logout', {
+      method: 'POST',
+    });
+  } catch (error) {
+    console.log('Trying index endpoint with auth action...');
+    const response = await fetch('/api/index?action=auth/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to logout');
+    }
+    
+    return response.json();
+  }
 }
 
-// Initialize query client with better error handling
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
