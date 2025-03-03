@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Diagnostic Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #444;
+            margin-top: 30px;
+        }
+        .image-test {
+            margin-bottom: 40px;
+        }
+        .image-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .image-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            width: 300px;
+        }
+        .image-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .download-test {
+            margin-bottom: 40px;
+        }
+        .download-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .download-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+            width: 200px;
+        }
+        .download-item a {
+            display: block;
+            text-align: center;
+            background-color: #4a6cf7;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .download-item a:hover {
+            background-color: #3451b2;
+        }
+        .file-info {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Portfolio Diagnostic Page</h1>
+    <p>This page tests image loading and file downloading functionality.</p>
+    
+    <div class="image-test">
+        <h2>Image Loading Test</h2>
+        <p>Testing different ways to load images:</p>
+        
+        <div class="image-container">
+            <div class="image-item">
+                <h3>Portfolio Image (Direct Path)</h3>
+                <img src="/EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png" alt="Portfolio Image">
+                <p>Path: /EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png</p>
+            </div>
+            
+            <div class="image-item">
+                <h3>Coupon Image (Direct Path)</h3>
+                <img src="/Coupon.png" alt="Coupon Image">
+                <p>Path: /Coupon.png</p>
+            </div>
+            
+            <div class="image-item">
+                <h3>Billiard Image (Direct Path)</h3>
+                <img src="/billiardTable.png" alt="Billiard Image">
+                <p>Path: /billiardTable.png</p>
+            </div>
+        </div>
+        
+        <div class="image-container">
+            <div class="image-item">
+                <h3>Portfolio Image (Absolute Path)</h3>
+                <img id="portfolio-abs" alt="Portfolio Image (Absolute)">
+                <p id="portfolio-abs-path"></p>
+            </div>
+            
+            <div class="image-item">
+                <h3>Coupon Image (Absolute Path)</h3>
+                <img id="coupon-abs" alt="Coupon Image (Absolute)">
+                <p id="coupon-abs-path"></p>
+            </div>
+            
+            <div class="image-item">
+                <h3>Billiard Image (Absolute Path)</h3>
+                <img id="billiard-abs" alt="Billiard Image (Absolute)">
+                <p id="billiard-abs-path"></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="download-test">
+        <h2>File Download Test</h2>
+        <p>Testing different ways to download the CV:</p>
+        
+        <div class="download-links">
+            <div class="download-item">
+                <h3>Direct Link</h3>
+                <a href="/Max Mullokandov CV.pdf">Download CV</a>
+            </div>
+            
+            <div class="download-item">
+                <h3>With Download Attribute</h3>
+                <a href="/Max Mullokandov CV.pdf" download="Max Mullokandov CV.pdf">Download CV</a>
+            </div>
+            
+            <div class="download-item">
+                <h3>JavaScript Download</h3>
+                <a href="#" onclick="downloadWithJS(); return false;">Download CV</a>
+            </div>
+        </div>
+    </div>
+    
+    <h2>Environment Information</h2>
+    <div class="file-info" id="env-info">Loading environment information...</div>
+    
+    <script>
+        // Set absolute URLs for images
+        window.onload = function() {
+            const baseUrl = window.location.origin;
+            
+            // Portfolio image
+            const portfolioAbsImg = document.getElementById('portfolio-abs');
+            const portfolioAbsPath = baseUrl + '/EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png';
+            portfolioAbsImg.src = portfolioAbsPath;
+            document.getElementById('portfolio-abs-path').textContent = 'Path: ' + portfolioAbsPath;
+            
+            // Coupon image
+            const couponAbsImg = document.getElementById('coupon-abs');
+            const couponAbsPath = baseUrl + '/Coupon.png';
+            couponAbsImg.src = couponAbsPath;
+            document.getElementById('coupon-abs-path').textContent = 'Path: ' + couponAbsPath;
+            
+            // Billiard image
+            const billiardAbsImg = document.getElementById('billiard-abs');
+            const billiardAbsPath = baseUrl + '/billiardTable.png';
+            billiardAbsImg.src = billiardAbsPath;
+            document.getElementById('billiard-abs-path').textContent = 'Path: ' + billiardAbsPath;
+            
+            // Collect environment info
+            const envInfo = document.getElementById('env-info');
+            const envData = {
+                'URL': window.location.href,
+                'Origin': window.location.origin,
+                'Host': window.location.host,
+                'Protocol': window.location.protocol,
+                'User Agent': navigator.userAgent,
+                'Screen Size': `${window.screen.width}x${window.screen.height}`,
+                'Window Size': `${window.innerWidth}x${window.innerHeight}`,
+                'Timestamp': new Date().toISOString()
+            };
+            
+            let envText = '';
+            for (const [key, value] of Object.entries(envData)) {
+                envText += `${key}: ${value}\n`;
+            }
+            
+            envInfo.textContent = envText;
+        };
+        
+        // JavaScript download function
+        function downloadWithJS() {
+            const link = document.createElement('a');
+            link.href = '/Max Mullokandov CV.pdf';
+            link.download = 'Max Mullokandov CV.pdf';
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html> 
