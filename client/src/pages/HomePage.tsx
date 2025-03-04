@@ -69,9 +69,15 @@ export default function HomePage() {
 
   // Create a more strict validation schema that extends the database schema
   const contactFormSchema = z.object({
-    name: z.string().min(1, "Name is required"),
-    email: z.string().min(1, "Email is required").email("Invalid email format"),
-    message: z.string().min(1, "Message is required").max(500, "Message must be 500 characters or less")
+    name: z.string()
+      .min(1, "Name is required")
+      .regex(/^[A-Za-z\s-]+$/, "Name can only contain letters, spaces, and hyphens"),
+    email: z.string()
+      .min(1, "Email is required")
+      .email("Invalid email format"),
+    message: z.string()
+      .min(1, "Message is required")
+      .max(500, "Message must be 500 characters or less")
   });
 
   const contactForm = useForm({
@@ -327,6 +333,7 @@ export default function HomePage() {
                 <form
                   onSubmit={contactForm.handleSubmit((data) => contactMutation.mutate(data))}
                   className="space-y-6 text-left"
+                  noValidate
                 >
                   <FormField
                     control={contactForm.control}

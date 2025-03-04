@@ -80,13 +80,13 @@ export function ThemeToggle() {
       variant="outline" 
       size="icon"
       onClick={toggleTheme}
-      className="transition-transform hover:rotate-45 duration-300 border-2 border-primary/40"
+      className="h-8 w-8 md:h-10 md:w-10 transition-transform hover:rotate-45 duration-300 border-2 border-primary/40"
       aria-label="Toggle theme"
     >
       {isDarkMode ? (
-        <Sun className="h-5 w-5 transition-all animate-in duration-300" />
+        <Sun className="h-4 w-4 md:h-5 md:w-5 transition-all animate-in duration-300" />
       ) : (
-        <Moon className="h-5 w-5 transition-all animate-in duration-300" />
+        <Moon className="h-4 w-4 md:h-5 md:w-5 transition-all animate-in duration-300" />
       )}
       <span className="sr-only">
         {isDarkMode ? "Switch to light mode" : "Switch to dark mode"}

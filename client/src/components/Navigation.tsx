@@ -1,12 +1,8 @@
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { ThemeToggle } from './ui/theme-toggle';
 
@@ -34,14 +30,14 @@ export default function Navigation() {
 
   return (
     <header className="fixed w-full z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex items-center justify-between h-16">
+      <div className="container mx-auto flex items-center justify-between h-14 px-4 md:px-6 md:h-16">
         <NavigationMenu className="flex justify-center">
-          <NavigationMenuList className="flex items-center gap-6">
+          <NavigationMenuList className="flex items-center gap-1 sm:gap-3 md:gap-6">
             {links.map((link) => (
               <NavigationMenuItem key={link.id}>
                 <Button
                   variant="ghost"
-                  className="px-6 h-10 text-base font-medium transition-colors hover:text-primary hover:bg-accent/50"
+                  className="px-2 sm:px-3 md:px-6 h-8 md:h-10 text-sm md:text-base font-medium transition-colors hover:text-primary hover:bg-accent/50"
                   onClick={() => scrollToSection(link.id)}
                 >
                   {link.label}
@@ -50,7 +46,7 @@ export default function Navigation() {
             ))}
           </NavigationMenuList>
         </NavigationMenu>
-        <div className="flex items-center">
+        <div className="flex items-center ml-1">
           <ThemeToggle />
         </div>
       </div>
