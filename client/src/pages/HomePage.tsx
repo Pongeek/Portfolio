@@ -71,7 +71,7 @@ export default function HomePage() {
   const contactFormSchema = z.object({
     name: z.string().min(1, "Name is required"),
     email: z.string().min(1, "Email is required").email("Invalid email format"),
-    message: z.string().min(1, "Message is required")
+    message: z.string().min(1, "Message is required").max(500, "Message must be 500 characters or less")
   });
 
   const contactForm = useForm({
@@ -337,7 +337,7 @@ export default function HomePage() {
                         <FormControl>
                           <Input placeholder="Your name" {...field} />
                         </FormControl>
-                        <FormMessage className="text-left" />
+                        <FormMessage className="text-left form-message" />
                       </FormItem>
                     )}
                   />
@@ -355,7 +355,7 @@ export default function HomePage() {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage className="text-left" />
+                        <FormMessage className="text-left form-message" />
                       </FormItem>
                     )}
                   />
@@ -364,16 +364,31 @@ export default function HomePage() {
                     control={contactForm.control}
                     name="message"
                     render={({ field }) => (
-                      <FormItem className="text-left">
+                      <FormItem>
                         <FormLabel className="text-left">Message</FormLabel>
                         <FormControl>
-                          <Textarea
-                            placeholder="Your message here..."
-                            className="min-h-[150px]"
-                            {...field}
-                          />
+                          <div className="relative">
+                            <Textarea
+                              placeholder="Your message here..."
+                              className="min-h-[150px]"
+                              {...field}
+                              onChange={(e) => {
+                                field.onChange(e);
+                                // This is needed to update form state
+                              }}
+                            />
+                            <div className={`text-xs mt-1 text-right ${
+                              field.value?.length > 400 
+                                ? field.value?.length > 475 
+                                  ? "text-destructive" 
+                                  : "text-amber-500" 
+                                : "text-muted-foreground"
+                            }`}>
+                              {field.value?.length || 0}/500 characters
+                            </div>
+                          </div>
                         </FormControl>
-                        <FormMessage className="text-left" />
+                        <FormMessage className="text-left form-message" />
                       </FormItem>
                     )}
                   />
