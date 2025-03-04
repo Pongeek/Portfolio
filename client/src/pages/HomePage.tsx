@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/form";
 import { FiDownload } from "react-icons/fi";
 import { MdFileDownload } from "react-icons/md";
+import { z } from "zod";
 
 export default function HomePage() {
   const { data: profile, isLoading: profileLoading } = useQuery<Profile>({
@@ -66,13 +67,20 @@ export default function HomePage() {
 
   // Remove project search state as it's no longer needed
 
+  // Create a more strict validation schema that extends the database schema
+  const contactFormSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().min(1, "Email is required").email("Invalid email format"),
+    message: z.string().min(1, "Message is required")
+  });
+
   const contactForm = useForm({
-    resolver: zodResolver(insertMessageSchema),
+    resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: "",
       email: "",
-      message: "",
-    },
+      message: ""
+    }
   });
 
   const contactMutation = useMutation({
