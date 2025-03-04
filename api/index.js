@@ -425,39 +425,6 @@ async function handleContact(req, res) {
   }
 }
 
-// Login handler
-function handleLogin(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-  
-  // Example mock login (in a real app, you'd check credentials)
-  const { username, password } = req.body;
-  
-  if (!username || !password) {
-    return res.status(400).json({ error: 'Username and password are required' });
-  }
-  
-  // Simple mock auth (you would use proper auth in a real app)
-  if (username === 'admin' && password === 'password') {
-    return res.status(200).json({ 
-      user: { id: 1, username: 'admin', name: 'Admin User' },
-      token: 'mock-jwt-token' 
-    });
-  }
-  
-  return res.status(401).json({ error: 'Invalid credentials' });
-}
-
-// Logout handler
-function handleLogout(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-  
-  // In a real app, you'd invalidate tokens or sessions
-  return res.status(200).json({ message: 'Logged out successfully' });
-}
 
 // Direct CV download handler
 function handleCVDownload(req, res) {
