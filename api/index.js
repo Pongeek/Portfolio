@@ -432,7 +432,7 @@ function handleCVDownload(req, res) {
     console.log('CV download requested');
     
     const publicDir = path.join(process.cwd(), 'public');
-    let cvFileName = 'Max Mullokandov CV.pdf';
+    let cvFileName = 'Max_Mullokandov_FullStack_Developer.pdf';
     let cvPath = path.join(publicDir, cvFileName);
     
     // Check if the CV exists
@@ -441,6 +441,7 @@ function handleCVDownload(req, res) {
       
       // Try alternate filenames
       const possibleNames = [
+        'Max_Mullokandov_FullStack_Developer.pdf',
         'Max Mullokandov CV.pdf',
         'Max_Mullokandov_CV.pdf',
         'MaxMullokandovCV.pdf',
