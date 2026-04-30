@@ -2,6 +2,8 @@ import type { Express, Request, Response } from "express";
 import session from "express-session";
 import rateLimit from "express-rate-limit";
 import { body, validationResult } from "express-validator";
+import fs from "fs";
+import path from "path";
 
 declare module "express-session" {
   interface SessionData {
@@ -27,8 +29,35 @@ const contactLimiter = rateLimit({
 
 
 export function registerRoutes(app: Express) {
-  // Projects
+  // Projects — serve from db/projects.json (source of truth), fall back to DB
   app.get("/api/projects", async (req, res) => {
+    try {
+      const jsonPath = path.join(process.cwd(), "db", "projects.json");
+      if (fs.existsSync(jsonPath)) {
+        const { projects: jsonProjects } = JSON.parse(
+          fs.readFileSync(jsonPath, "utf8")
+        ) as {
+          projects: {
+            title: string; description: string; technologies: string[];
+            imageUrl?: string; liveUrl?: string; githubUrl: string; createdAt?: string;
+          }[];
+        };
+        return res.json(
+          jsonProjects.map((p, i) => ({
+            id: i + 1,
+            title: p.title,
+            description: p.description,
+            technologies: Array.isArray(p.technologies) ? p.technologies : [],
+            imageUrl: p.imageUrl ?? null,
+            liveUrl: p.liveUrl ?? null,
+            githubUrl: p.githubUrl,
+            createdAt: p.createdAt ? new Date(p.createdAt) : null,
+          }))
+        );
+      }
+    } catch (err) {
+      console.error("Failed to read projects.json, falling back to DB:", err);
+    }
     const allProjects = await db.select().from(projects).orderBy(projects.createdAt);
     res.json(allProjects);
   });
