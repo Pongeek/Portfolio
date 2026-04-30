@@ -194,40 +194,78 @@ async function handleFileServing(req, res, params) {
   return res.status(200).send(fileBuffer);
 }
 
-// Projects data handler
+// Projects data handler — reads db/projects.json (single source of truth),
+// falls back to inline data if the file isn't available.
 function handleProjects(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-  
-  // Updated projects data with new descriptions and technologies
+
+  // Try to read from the canonical JSON file first
+  try {
+    const candidates = [
+      path.join(process.cwd(), 'db', 'projects.json'),
+      path.join(__dirname, '..', 'db', 'projects.json'),
+      path.join(__dirname, 'db', 'projects.json'),
+    ];
+    for (const jsonPath of candidates) {
+      if (fs.existsSync(jsonPath)) {
+        const { projects: jsonProjects } = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+        return res.status(200).json(
+          jsonProjects.map((p, i) => ({
+            id: i + 1,
+            title: p.title,
+            description: p.description,
+            technologies: Array.isArray(p.technologies) ? p.technologies : [],
+            imageUrl: p.imageUrl ?? null,
+            liveUrl: p.liveUrl ?? '',
+            githubUrl: p.githubUrl,
+            createdAt: p.createdAt ?? null,
+          }))
+        );
+      }
+    }
+  } catch (err) {
+    console.error('Failed to read projects.json, using inline fallback:', err);
+  }
+
+  // Inline fallback — keep this in sync with db/projects.json
   return res.status(200).json([
     {
       id: 1,
       title: "Portfolio Website",
-      description: "A modern portfolio website built with ReactJS, Express, and PostgreSQL.",
-      imageUrl: "/portfolio-preview.png",
-      technologies: ["React", "Next.js", "Tailwind CSS", "PostgreSQL", "Express"],
+      description: "Full-stack portfolio built with React 18, TypeScript, and Express. Features a PostgreSQL backend with Drizzle ORM, serverless deployment to Vercel, dark/light theming with zero flash, and a rate-limited contact form with server-side validation.",
+      imageUrl: "/max-profile.png",
+      technologies: ["React", "TypeScript", "Tailwind CSS", "Express", "PostgreSQL"],
       githubUrl: "https://github.com/Pongeek/Portfolio",
       liveUrl: ""
     },
     {
       id: 2,
-      title: "CoupCoupon Project",
-      description: "A comprehensive platform for managing coupons and deals, featuring role-based access control for admins, companies, and customers. Built with modern web technologies. This platform enables admins to manage users and deals, companies to create and track coupons, and customers to find and redeem offers.",
+      title: "CoupCoupon",
+      description: "Role-based coupon management system with three distinct user tiers: Admin, Company, and Customer. Java Spring Boot backend exposes a RESTful API secured with JWT. React/TypeScript frontend consumes the API with dynamic dashboards per role, backed by a MySQL database.",
       imageUrl: "/Coupon.png",
-      technologies: ["Java Spring", "React", "MySQL", "TypeScript", "JWT", "RESTful API"],
+      technologies: ["Java Spring", "React", "TypeScript", "MySQL", "JWT", "RESTful API"],
       githubUrl: "https://github.com/Pongeek/CoupCoupon-client",
       liveUrl: ""
     },
     {
       id: 3,
-      title: "Billiard Game - Squeak Smalltalk",
-      description: "An interactive billiard game implemented in Squeak Smalltalk, featuring realistic physics, collision detection, and an intuitive user interface. Players can aim and shoot using mouse controls, with the game automatically handling ball movements, collisions, and game rules.",
+      title: "Billiard Game — Squeak Smalltalk",
+      description: "Object-oriented billiard game built from scratch in Squeak Smalltalk. Implements real-time elastic collision physics, mouse-driven trajectory aiming, game-state management, and a clean separation between the physics engine and UI rendering layers.",
       imageUrl: "/billiardTable.png",
-      technologies: ["Squeak Smalltalk", "Object-Oriented Programming", "Physics Simulation", "UI Design", "Game Development"],
+      technologies: ["Squeak Smalltalk", "OOP", "Physics Simulation", "Game Development"],
       githubUrl: "https://github.com/Pongeek/object-oriented-programming-Squeak-Smalltalk/tree/main",
       liveUrl: ""
+    },
+    {
+      id: 4,
+      title: "TileTech",
+      description: "Professional business website for a tiling and renovation company serving central Israel. Built with Next.js 14 App Router and TypeScript — features bilingual RTL/LTR support for Hebrew and English, SEO optimization with JSON-LD structured data and automatic sitemap generation, image optimization with WebP/AVIF conversion, and a validated contact form. Deployed to Vercel.",
+      imageUrl: "/tiletech-preview.png",
+      technologies: ["Next.js 14", "TypeScript", "Tailwind CSS", "React", "Vercel", "SEO"],
+      githubUrl: "https://github.com/Pongeek/TileTech",
+      liveUrl: "https://tile-tech.vercel.app/"
     }
   ]);
 }
@@ -238,24 +276,26 @@ function handleSkills(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
   
-  // Updated skills data based on user requirements
+  // Canonical skills list — keep in sync with server/index.ts CANONICAL_SKILLS
   return res.status(200).json([
-    { id: 1, name: "JavaScript", category: "Frontend", level: 90 },
-    { id: 2, name: "TypeScript", category: "Frontend", level: 85 },
-    { id: 3, name: "React", category: "Frontend", level: 95 },
-    { id: 4, name: "HTML/CSS", category: "Frontend", level: 90 },
-    { id: 5, name: "Tailwind CSS", category: "Frontend", level: 85 },
-    { id: 6, name: "Node.js", category: "Backend", level: 80 },
-    { id: 7, name: "Java", category: "Backend", level: 75 },
-    { id: 8, name: "Spring Framework", category: "Backend", level: 70 },
-    { id: 9, name: "Python", category: "Backend", level: 75 },
-    { id: 10, name: "MySQL", category: "Database", level: 85 },
-    { id: 11, name: "PostgreSQL", category: "Database", level: 80 },
-    { id: 12, name: "MongoDB", category: "Database", level: 75 },
-    { id: 13, name: "GitHub", category: "Tools", level: 90 },
-    { id: 14, name: "RESTful API", category: "Tools", level: 85 },
-    { id: 15, name: "JWT", category: "Tools", level: 80 },
-    { id: 16, name: "Docker", category: "DevOps", level: 70 }
+    { id: 1,  name: "JavaScript",   category: "Frontend" },
+    { id: 2,  name: "TypeScript",   category: "Frontend" },
+    { id: 3,  name: "React",        category: "Frontend" },
+    { id: 4,  name: "HTML/CSS",     category: "Frontend" },
+    { id: 5,  name: "Tailwind CSS", category: "Frontend" },
+    { id: 6,  name: "Node.js",      category: "Backend"  },
+    { id: 7,  name: "Java",         category: "Backend"  },
+    { id: 8,  name: "Spring Boot",  category: "Backend"  },
+    { id: 9,  name: "Python",       category: "Backend"  },
+    { id: 10, name: "MySQL",        category: "Database" },
+    { id: 11, name: "PostgreSQL",   category: "Database" },
+    { id: 12, name: "MongoDB",      category: "Database" },
+    { id: 13, name: "GitHub",       category: "Tools"    },
+    { id: 14, name: "RESTful API",  category: "Tools"    },
+    { id: 15, name: "JWT",          category: "Tools"    },
+    { id: 16, name: "Docker",       category: "DevOps"   },
+    { id: 17, name: "AWS",          category: "DevOps"   },
+    { id: 18, name: "Linux",        category: "DevOps"   }
   ]);
 }
 
