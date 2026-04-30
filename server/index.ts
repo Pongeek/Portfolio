@@ -1,12 +1,13 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { registerRoutes } from "./routes";
 import { setupVite } from "./vite";
 import { createServer } from "http";
 import session from "express-session";
 import MemoryStore from "memorystore";
 import { db, connectDB } from "../db";
-import { sql } from "drizzle-orm";
+import { sql, eq } from "drizzle-orm";
 import * as schema from "@db/schema";
 
 async function checkEnvironment() {
@@ -192,6 +193,96 @@ if (process.env.NODE_ENV !== "production") {
 
 const PORT = process.env.PORT || process.env.NODE_ENV === "production" ? 3000 : 5000;
 
+// ─── Sync canonical data into the live PostgreSQL database ────────────────────
+// Runs once on every startup. Safe to re-run: projects matched by githubUrl,
+// skills matched by name — no duplicates, just inserts + updates.
+async function syncFromJson() {
+  try {
+    // ── Projects ────────────────────────────────────────────────────────────
+    const jsonPath = path.join(process.cwd(), "db", "projects.json");
+    if (fs.existsSync(jsonPath)) {
+      type JsonProject = {
+        title: string; description: string; technologies: string[];
+        imageUrl?: string; liveUrl?: string; githubUrl: string;
+      };
+      const { projects: jsonProjects } = JSON.parse(
+        fs.readFileSync(jsonPath, "utf8")
+      ) as { projects: JsonProject[] };
+
+      const existing = await db
+        .select({ id: schema.projects.id, githubUrl: schema.projects.githubUrl })
+        .from(schema.projects);
+      const byUrl = new Map(existing.map((p) => [p.githubUrl, p.id]));
+
+      let ins = 0, upd = 0;
+      for (const p of jsonProjects) {
+        const row = {
+          title:        p.title,
+          description:  p.description,
+          technologies: p.technologies,
+          imageUrl:     p.imageUrl  ?? null,
+          liveUrl:      p.liveUrl   ?? null,
+          githubUrl:    p.githubUrl,
+        };
+        if (byUrl.has(p.githubUrl)) {
+          await db.update(schema.projects).set(row)
+            .where(eq(schema.projects.githubUrl, p.githubUrl));
+          upd++;
+        } else {
+          await db.insert(schema.projects).values(row);
+          ins++;
+        }
+      }
+      console.log(`Projects synced — inserted: ${ins}, updated: ${upd}`);
+    }
+
+    // ── Skills ──────────────────────────────────────────────────────────────
+    const CANONICAL_SKILLS = [
+      { name: "JavaScript",  category: "Frontend" },
+      { name: "TypeScript",  category: "Frontend" },
+      { name: "React",       category: "Frontend" },
+      { name: "HTML/CSS",    category: "Frontend" },
+      { name: "Tailwind CSS",category: "Frontend" },
+      { name: "Node.js",     category: "Backend"  },
+      { name: "Java",        category: "Backend"  },
+      { name: "Spring Boot", category: "Backend"  },
+      { name: "Python",      category: "Backend"  },
+      { name: "MySQL",       category: "Database" },
+      { name: "PostgreSQL",  category: "Database" },
+      { name: "MongoDB",     category: "Database" },
+      { name: "GitHub",      category: "Tools"    },
+      { name: "RESTful API", category: "Tools"    },
+      { name: "JWT",         category: "Tools"    },
+      { name: "Docker",      category: "DevOps"   },
+      { name: "AWS",         category: "DevOps"   },
+      { name: "Linux",       category: "DevOps"   },
+    ];
+
+    const existingSkills = await db
+      .select({ id: schema.skills.id, name: schema.skills.name })
+      .from(schema.skills);
+    const skillNames = new Set(existingSkills.map((s) => s.name));
+
+    let sIns = 0, sUpd = 0;
+    for (const skill of CANONICAL_SKILLS) {
+      if (skillNames.has(skill.name)) {
+        await db.update(schema.skills)
+          .set({ category: skill.category })
+          .where(eq(schema.skills.name, skill.name));
+        sUpd++;
+      } else {
+        await db.insert(schema.skills).values({ ...skill, icon: "" });
+        sIns++;
+      }
+    }
+    console.log(`Skills synced  — inserted: ${sIns}, updated: ${sUpd}`);
+
+  } catch (err) {
+    // Non-fatal — server still starts even if sync fails
+    console.error("syncFromJson error:", err instanceof Error ? err.message : String(err));
+  }
+}
+
 // Start server after checking environment and database connection
 async function startServer() {
   try {
@@ -216,6 +307,9 @@ async function startServer() {
         } else {
           console.warn('⚠ Database unavailable — API endpoints will use client-side fallback data.');
         }
+      } else {
+        // DB is live — upsert projects & skills from canonical JSON/list
+        await syncFromJson();
       }
     }
 
