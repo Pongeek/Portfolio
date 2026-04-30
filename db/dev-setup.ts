@@ -86,10 +86,14 @@ export function setupDevDb() {
       );
     `);
     
-    // Load projects from JSON file
-    const projectsData = JSON.parse(fs.readFileSync(path.join(__dirname, 'projects.json'), 'utf8'));
-    
-    // Insert projects from the JSON file
+    // Load projects from JSON file if it exists
+    let projectsData: any = null;
+    try {
+      projectsData = JSON.parse(fs.readFileSync(path.join(__dirname, 'projects.json'), 'utf8'));
+    } catch {
+      console.log('No projects.json found — skipping project seed from file.');
+    }
+
     if (projectsData && projectsData.projects && projectsData.projects.length > 0) {
       // Drop existing projects first
       sqlite.exec(`DROP TABLE IF EXISTS projects`);
@@ -142,7 +146,7 @@ export function setupDevDb() {
           'A passionate developer with experience in modern web technologies including React.js, Express, and TypeScript. I build responsive and powerful web applications with clean, maintainable code.',
           '{"github":"https://github.com/yourusername","linkedin":"https://linkedin.com/in/yourusername"}',
           '/Max Mullokandov CV.pdf',
-          '/EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png'
+          '/max-profile.png'
         )
       `).run();
       
@@ -155,7 +159,7 @@ export function setupDevDb() {
           'Portfolio Website', 
           'A responsive personal portfolio website built with React, Express, and TypeScript. Features include a contact form, project showcase, and animated UI components.',
           '["React", "TypeScript", "Express", "PostgreSQL", "Tailwind CSS", "Shadcn UI"]', 
-          '/EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png',
+          '/max-profile.png',
           'https://github.com/yourusername/portfolio',
           'https://portfolio-demo.com'
         )
@@ -175,51 +179,37 @@ export function setupDevDb() {
       */
       
       console.log('Adding your skills data...');
-      // Frontend skills
-      sqlite.prepare(`
-        INSERT INTO skills (name, category, icon)
-        VALUES ('React', 'Frontend', 'react-icon')
-      `).run();
-      sqlite.prepare(`
-        INSERT INTO skills (name, category, icon)
-        VALUES ('TypeScript', 'Frontend', 'typescript-icon')
-      `).run();
-      sqlite.prepare(`
-        INSERT INTO skills (name, category, icon)
-        VALUES ('JavaScript', 'Frontend', 'javascript-icon')
-      `).run();
-      sqlite.prepare(`
-        INSERT INTO skills (name, category, icon)
-        VALUES ('Tailwind CSS', 'Frontend', 'tailwind-icon')
-      `).run();
-      
-      // Backend skills
-      sqlite.prepare(`
-        INSERT INTO skills (name, category, icon)
-        VALUES ('Node.js', 'Backend', 'nodejs-icon')
-      `).run();
-      sqlite.prepare(`
-        INSERT INTO skills (name, category, icon)
-        VALUES ('Express', 'Backend', 'express-icon')
-      `).run();
-      sqlite.prepare(`
-        INSERT INTO skills (name, category, icon)
-        VALUES ('PostgreSQL', 'Backend', 'postgresql-icon')
-      `).run();
-      sqlite.prepare(`
-        INSERT INTO skills (name, category, icon)
-        VALUES ('REST API', 'Backend', 'api-icon')
-      `).run();
-      
-      // DevOps skills
-      sqlite.prepare(`
-        INSERT INTO skills (name, category, icon)
-        VALUES ('Git', 'DevOps', 'git-icon')
-      `).run();
-      sqlite.prepare(`
-        INSERT INTO skills (name, category, icon)
-        VALUES ('Docker', 'DevOps', 'docker-icon')
-      `).run();
+      const skillsData = [
+        // Frontend
+        { name: 'JavaScript',  category: 'Frontend' },
+        { name: 'TypeScript',  category: 'Frontend' },
+        { name: 'React',       category: 'Frontend' },
+        { name: 'HTML/CSS',    category: 'Frontend' },
+        { name: 'Tailwind CSS',category: 'Frontend' },
+        // Backend
+        { name: 'Node.js',     category: 'Backend'  },
+        { name: 'Java',        category: 'Backend'  },
+        { name: 'Spring Boot', category: 'Backend'  },
+        { name: 'Python',      category: 'Backend'  },
+        // Database
+        { name: 'MySQL',       category: 'Database' },
+        { name: 'PostgreSQL',  category: 'Database' },
+        { name: 'MongoDB',     category: 'Database' },
+        // Tools
+        { name: 'GitHub',      category: 'Tools'    },
+        { name: 'RESTful API', category: 'Tools'    },
+        { name: 'JWT',         category: 'Tools'    },
+        // DevOps
+        { name: 'Docker',      category: 'DevOps'   },
+        { name: 'AWS',         category: 'DevOps'   },
+        { name: 'Linux',       category: 'DevOps'   },
+      ];
+      const insertSkill = sqlite.prepare(
+        `INSERT INTO skills (name, category, icon) VALUES (?, ?, '')`
+      );
+      for (const s of skillsData) {
+        insertSkill.run(s.name, s.category);
+      }
     }
     
     console.log('Development database setup complete');

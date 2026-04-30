@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -9,8 +8,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Github, Globe } from "lucide-react";
-
 import type { Project } from "@db/schema";
+import { useCardTilt } from "@/hooks/useCardTilt";
 
 type ProjectCardProps = {
   title: Project["title"];
@@ -19,11 +18,7 @@ type ProjectCardProps = {
   imageUrl: Project["imageUrl"];
   liveUrl: Project["liveUrl"];
   githubUrl: Project["githubUrl"];
-}
-
-// This is a list of project titles that should not display a Live Demo button
-// even if they have a liveUrl value
-const projectsWithoutLiveDemo = ["Portfolio Website", "CoupCoupon"];
+};
 
 export default function ProjectCard({
   title,
@@ -33,71 +28,90 @@ export default function ProjectCard({
   liveUrl,
   githubUrl,
 }: ProjectCardProps) {
-  // Only show the Live Demo button if:
-  // 1. The project has a liveUrl AND
-  // 2. The project is not in the list of projects without Live Demo
-  const shouldShowLiveDemo = liveUrl && liveUrl.trim() !== "" && !projectsWithoutLiveDemo.includes(title);
+  const hasLiveDemo = Boolean(liveUrl && liveUrl.trim() !== "");
+  const { ref, onMouseMove, onMouseLeave } = useCardTilt();
 
   return (
-    <Card className="flex flex-col h-[32rem] w-[24rem] overflow-hidden project-card animate-fade-up hover:scale-[1.02] transition-transform duration-300">
-      <div className="h-60 overflow-hidden bg-muted">
-        <img
-          src={
-            title.toLowerCase().includes('coupcoupon')
-              ? '/Coupon.png'
-              : title.toLowerCase().includes('portfolio')
-                ? '/EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png'
-                : (imageUrl || '/image.png')
-          }
-          className="w-full h-full object-cover object-center transition-transform hover:scale-105"
-          onError={(e) => {
-            const img = e.target as HTMLImageElement;
-            img.src = '/image.png';
-          }}
-          alt={`${title} project screenshot`}
-        />
-      </div>
-
-      <CardHeader className="p-4 pb-0">
-        <CardTitle className="text-xl">{title}</CardTitle>
-      </CardHeader>
-
-      <CardContent className="p-4 pt-2 flex-grow overflow-hidden">
-        <div className="h-24 overflow-y-auto mb-4 text-sm text-muted-foreground">
-          <p>{description}</p>
+    // Tilt wrapper — transform is applied here so the card's own border/shadow animates too
+    <div
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      className="h-full"
+      style={{ willChange: "transform" }}
+    >
+      <Card className="group flex flex-col w-full h-full overflow-hidden border-border/60 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-[border-color,box-shadow] duration-300">
+        {/* Image — 16:9 aspect ratio, zoom on hover */}
+        <div className="relative aspect-video overflow-hidden bg-muted">
+          <img
+            src={imageUrl || "/max-profile.png"}
+            alt={`${title} screenshot`}
+            loading="lazy"
+            className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = "/max-profile.png";
+            }}
+          />
+          {/* Live badge — shown when the project has a live URL */}
+          {hasLiveDemo && (
+            <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5
+              px-2.5 py-1 rounded-full
+              bg-card/85 backdrop-blur-sm border border-emerald-500/30 shadow-sm">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+              </span>
+              <span className="text-[11px] font-mono font-medium text-emerald-400 leading-none">Live</span>
+            </div>
+          )}
         </div>
 
-        <div className="flex flex-wrap gap-2 mt-auto">
-          {technologies?.map((tech, index) => (
-            <Badge key={index} variant="secondary" className="text-xs">
-              {tech}
-            </Badge>
-          ))}
-        </div>
-      </CardContent>
+        {/* Title */}
+        <CardHeader className="p-5 pb-2">
+          <CardTitle className="font-display text-lg leading-snug">{title}</CardTitle>
+        </CardHeader>
 
-      <CardFooter className="p-4 pt-0 mt-auto">
-        <div className="flex w-full gap-2">
-          {shouldShowLiveDemo && (
-            <Button variant="outline" size="sm" className="flex-1 max-w-36" asChild>
-              <a href={liveUrl} target="_blank" rel="noopener noreferrer">
-                <Globe className="mr-2 h-4 w-4" />
+        {/* Description + tech badges */}
+        <CardContent className="p-5 pt-0 flex-grow flex flex-col gap-4">
+          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+            {description}
+          </p>
+          <div className="flex flex-wrap gap-2 mt-auto">
+            {technologies?.map((tech, i) => (
+              <Badge
+                key={i}
+                variant="secondary"
+                className="text-xs font-mono px-2 py-0.5"
+              >
+                {tech}
+              </Badge>
+            ))}
+          </div>
+        </CardContent>
+
+        {/* Buttons */}
+        <CardFooter className="p-5 pt-0 gap-2">
+          {hasLiveDemo && (
+            <Button variant="outline" size="sm" className="flex-1" asChild>
+              <a href={liveUrl!} target="_blank" rel="noopener noreferrer">
+                <Globe className="mr-2 h-3.5 w-3.5" />
                 Live Demo
               </a>
             </Button>
           )}
-          <Button variant="outline" size="sm" className={shouldShowLiveDemo ? "flex-1 max-w-36" : "w-full"} asChild>
-            <a 
-              href={githubUrl} 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              <Github className="mr-2 h-4 w-4" />
+          <Button
+            variant="outline"
+            size="sm"
+            className={hasLiveDemo ? "flex-1" : "w-full"}
+            asChild
+          >
+            <a href={githubUrl} target="_blank" rel="noopener noreferrer">
+              <Github className="mr-2 h-3.5 w-3.5" />
               View Code
             </a>
           </Button>
-        </div>
-      </CardFooter>
-    </Card>
+        </CardFooter>
+      </Card>
+    </div>
   );
 }

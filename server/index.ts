@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import { registerRoutes } from "./routes";
 import { setupVite } from "./vite";
 import { createServer } from "http";
@@ -133,7 +134,7 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static('public')); // Serve static files from public directory
+app.use(express.static(path.join(process.cwd(), 'client', 'public'))); // Serve images, PDFs etc.
 
 // Error handling middleware
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -194,16 +195,28 @@ const PORT = process.env.PORT || process.env.NODE_ENV === "production" ? 3000 : 
 // Start server after checking environment and database connection
 async function startServer() {
   try {
+    const isProduction = process.env.NODE_ENV === 'production';
+
     const envCheck = await checkEnvironment();
     if (!envCheck) {
-      console.error('Missing required environment variables. Server will not start.');
-      process.exit(1);
+      if (isProduction) {
+        console.error('Missing required environment variables. Server will not start.');
+        process.exit(1);
+      } else {
+        console.warn('⚠ Some environment variables are missing — running in dev mode without DB/email.');
+      }
     }
 
-    const dbConnected = await testDbConnection();
-    if (!dbConnected) {
-      console.error('Failed to connect to database. Server will not start.');
-      process.exit(1);
+    if (envCheck) {
+      const dbConnected = await testDbConnection();
+      if (!dbConnected) {
+        if (isProduction) {
+          console.error('Failed to connect to database. Server will not start.');
+          process.exit(1);
+        } else {
+          console.warn('⚠ Database unavailable — API endpoints will use client-side fallback data.');
+        }
+      }
     }
 
     return new Promise((resolve, reject) => {

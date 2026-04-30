@@ -11,9 +11,8 @@ const pool = new Pool({
   database: process.env.PGDATABASE,
   user: process.env.PGUSER,
   password: process.env.PGPASSWORD,
-  ssl: {
-    rejectUnauthorized: false
-  },
+  // SSL only in production (Vercel/remote DB). Local PostgreSQL typically has no SSL.
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
   max: 3, // Minimal connections for Replit environment
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,

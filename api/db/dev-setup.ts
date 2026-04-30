@@ -142,7 +142,7 @@ export function setupDevDb() {
           'A passionate developer with experience in modern web technologies including React.js, Express, and TypeScript. I build responsive and powerful web applications with clean, maintainable code.',
           '{"github":"https://github.com/yourusername","linkedin":"https://linkedin.com/in/yourusername"}',
           '/Max Mullokandov CV.pdf',
-          '/EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png'
+          '/max-profile.png'
         )
       `).run();
       
@@ -155,7 +155,7 @@ export function setupDevDb() {
           'Portfolio Website', 
           'A responsive personal portfolio website built with React, Express, and TypeScript. Features include a contact form, project showcase, and animated UI components.',
           '["React", "TypeScript", "Express", "PostgreSQL", "Tailwind CSS", "Shadcn UI"]', 
-          '/EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png',
+          '/max-profile.png',
           'https://github.com/yourusername/portfolio',
           'https://portfolio-demo.com'
         )

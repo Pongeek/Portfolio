@@ -2,7 +2,6 @@ import type { Express, Request, Response } from "express";
 import session from "express-session";
 import rateLimit from "express-rate-limit";
 import { body, validationResult } from "express-validator";
-import xss from "xss";
 
 declare module "express-session" {
   interface SessionData {
@@ -82,11 +81,11 @@ export function registerRoutes(app: Express) {
           return res.status(400).json({ errors: errors.array() });
         }
 
-        // Sanitize inputs
+        // express-validator's .escape() already HTML-encodes the inputs in-place
         const sanitizedData = {
-          name: xss(req.body.name),
-          email: xss(req.body.email),
-          message: xss(req.body.message)
+          name: req.body.name,
+          email: req.body.email,
+          message: req.body.message,
         };
 
         console.log('Received contact form submission:', { 

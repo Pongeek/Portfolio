@@ -30,9 +30,8 @@ app.set('trust proxy', 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Serve static files from multiple directories
-app.use(express.static('public')); // Serve files from public directory
-app.use(express.static(path.join(process.cwd()))); // Serve files from root directory for images like EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png
+// Serve static assets from client/public (images, PDFs, etc.)
+app.use(express.static(path.join(process.cwd(), 'client', 'public')));
 
 // Create a special route for serving the CV
 app.get('/Max Mullokandov CV.pdf', (req, res) => {
@@ -41,7 +40,7 @@ app.get('/Max Mullokandov CV.pdf', (req, res) => {
 
 // Create a route to serve the profile image directly
 app.get('/profile-image', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'EAC167A1-6630-4BA0-BFE2-9B0146599AF3.png'));
+  res.sendFile(path.join(process.cwd(), 'client', 'public', 'max-profile.png'));
 });
 
 // Add a route for testing the contact form
