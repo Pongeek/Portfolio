@@ -1,3 +1,4 @@
+import { useState, useRef, useLayoutEffect } from "react";
 import {
   Card,
   CardContent,
@@ -7,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Github, Globe } from "lucide-react";
+import { Github, Globe, ChevronDown } from "lucide-react";
 import type { Project } from "@db/schema";
 import { useCardTilt } from "@/hooks/useCardTilt";
 import BlurImage from "@/components/BlurImage";
@@ -31,6 +32,18 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   const hasLiveDemo = Boolean(liveUrl && liveUrl.trim() !== "");
   const { ref, onMouseMove, onMouseLeave } = useCardTilt();
+
+  // "Read more" expand state
+  const [expanded, setExpanded] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const descRef = useRef<HTMLParagraphElement>(null);
+
+  // Detect whether the text is actually being cut off (only when collapsed)
+  useLayoutEffect(() => {
+    const el = descRef.current;
+    if (!el) return;
+    setIsClamped(el.scrollHeight > el.clientHeight);
+  }, [description]);
 
   return (
     // Tilt wrapper - transform is applied here so the card's own border/shadow animates too
@@ -74,9 +87,28 @@ export default function ProjectCard({
 
         {/* Description + tech badges */}
         <CardContent className="p-5 pt-0 flex-grow flex flex-col gap-4">
-          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-            {description}
-          </p>
+          <div className="flex flex-col gap-1">
+            <p
+              ref={descRef}
+              className={`text-sm text-muted-foreground leading-relaxed transition-all duration-300 ${
+                expanded ? "" : "line-clamp-3"
+              }`}
+            >
+              {description}
+            </p>
+            {isClamped && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setExpanded((x) => !x); }}
+                className="flex items-center gap-0.5 self-start text-xs text-primary/70 hover:text-primary transition-colors"
+                aria-expanded={expanded}
+              >
+                {expanded ? "Show less" : "Read more"}
+                <ChevronDown
+                  className={`h-3 w-3 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+                />
+              </button>
+            )}
+          </div>
           <div className="flex flex-wrap gap-2 mt-auto">
             {technologies?.map((tech, i) => (
               <Badge

@@ -69,7 +69,7 @@ export default function FeaturedProjectCard({ project }: { project: Project }) {
                 {project.title}
               </h3>
 
-              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-5">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {project.description}
               </p>
 
