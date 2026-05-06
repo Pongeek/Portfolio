@@ -26,10 +26,11 @@ const EMAIL = "MaximPim95@gmail.com";
 const contactSchema = z.object({
   name: z
     .string()
-    .min(1, "Name is required")
-    .regex(/^[A-Za-z\s-]+$/, "Name can only contain letters, spaces, and hyphens"),
+    .min(2, "Name must be at least 2 characters")
+    .max(100, "Name must be under 100 characters")
+    .regex(/^[A-Za-z\s'-]+$/, "Name can only contain letters, spaces, hyphens, and apostrophes"),
   email: z.string().min(1, "Email is required").email("Invalid email format"),
-  message: z.string().min(1, "Message is required").max(500, "Maximum 500 characters"),
+  message: z.string().min(10, "Message must be at least 10 characters").max(1000, "Maximum 1000 characters"),
 });
 
 type ContactFormValues = z.infer<typeof contactSchema>;
@@ -174,14 +175,14 @@ export default function ContactSection() {
                           />
                           <div
                             className={`text-xs mt-1 text-right ${
-                              (field.value?.length ?? 0) > 475
+                              (field.value?.length ?? 0) > 950
                                 ? "text-destructive"
-                                : (field.value?.length ?? 0) > 400
+                                : (field.value?.length ?? 0) > 850
                                 ? "text-amber-500"
                                 : "text-muted-foreground"
                             }`}
                           >
-                            {field.value?.length ?? 0}/500
+                            {field.value?.length ?? 0}/1000
                           </div>
                         </div>
                       </FormControl>

@@ -7,6 +7,7 @@ import type { ComponentType } from "react";
 interface TimelineItem {
   title: string;
   org: string;
+  period: string;        // e.g. "2021 – Present" or "2023"
   type: "Education" | "Work" | "Projects";
   icon: ComponentType<{ className?: string }>;
   current?: boolean;
@@ -14,10 +15,12 @@ interface TimelineItem {
   tags: string[];
 }
 
+// NOTE: verify / update the period values below to match your actual dates.
 const TIMELINE: TimelineItem[] = [
   {
     title: "B.Sc. Computer Science",
     org: "The Open University of Israel",
+    period: "2021 – Present",
     type: "Education",
     icon: GraduationCap,
     current: true,
@@ -28,6 +31,7 @@ const TIMELINE: TimelineItem[] = [
   {
     title: "Java Full Stack Bootcamp",
     org: "John Bryce Training",
+    period: "2022",
     type: "Education",
     icon: Code2,
     description:
@@ -37,6 +41,7 @@ const TIMELINE: TimelineItem[] = [
   {
     title: "Technical Support Specialist",
     org: "Website & Application Support · Banking",
+    period: "2020 – 2022",
     type: "Work",
     icon: Headphones,
     description:
@@ -46,6 +51,7 @@ const TIMELINE: TimelineItem[] = [
   {
     title: "Security Operations Center Analyst",
     org: "Cybersecurity · Banking Environment",
+    period: "2022 – 2024",
     type: "Work",
     icon: Shield,
     description:
@@ -55,6 +61,7 @@ const TIMELINE: TimelineItem[] = [
   {
     title: "Freelance & Personal Projects",
     org: "Full Stack Development",
+    period: "2023 – Present",
     type: "Projects",
     icon: Laptop,
     current: true,
@@ -142,11 +149,16 @@ export default function ExperienceSection() {
                               <p className="text-sm text-muted-foreground">{item.org}</p>
                             </div>
 
-                            {/* Type badge */}
-                            <span className={`flex-shrink-0 text-[11px] font-mono px-2.5 py-0.5
-                              rounded-full border ${TYPE_CLASS[item.type]}`}>
-                              {item.type}
-                            </span>
+                            {/* Type badge + period */}
+                            <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                              <span className={`text-[11px] font-mono px-2.5 py-0.5
+                                rounded-full border ${TYPE_CLASS[item.type]}`}>
+                                {item.type}
+                              </span>
+                              <span className="text-[11px] font-mono text-muted-foreground/70">
+                                {item.period}
+                              </span>
+                            </div>
                           </div>
 
                           {/* Description */}

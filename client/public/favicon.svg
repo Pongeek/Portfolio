@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Rounded square background in portfolio primary teal -->
+  <rect width="32" height="32" rx="7" fill="hsl(170,60%,52%)"/>
+  <!-- "MM" initials - bold, centred, dark fill for contrast -->
+  <text
+    x="16" y="22"
+    font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif"
+    font-weight="700"
+    font-size="13"
+    fill="hsl(170,100%,5%)"
+    text-anchor="middle"
+    letter-spacing="-0.5"
+  >MM</text>
+</svg>

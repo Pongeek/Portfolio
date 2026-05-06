@@ -9,7 +9,7 @@ const FALLBACK_PROJECTS = [
     imageUrl: "/max-profile.png",
     technologies: ["React", "TypeScript", "Tailwind CSS", "Express", "PostgreSQL"],
     githubUrl: "https://github.com/Pongeek/Portfolio",
-    liveUrl: "",
+    liveUrl: "https://maxmullo.com",
   },
   {
     id: 2,
