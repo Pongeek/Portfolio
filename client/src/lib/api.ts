@@ -3,6 +3,16 @@
 const FALLBACK_PROJECTS = [
   {
     id: 1,
+    title: "TileTech",
+    description:
+      "Professional business website for a tiling and renovation company serving central Israel. Built with Next.js 14 App Router and TypeScript - features bilingual RTL/LTR support for Hebrew and English, SEO optimization with JSON-LD structured data and automatic sitemap generation, image optimization with WebP/AVIF conversion, and a validated contact form. Deployed to Vercel.",
+    imageUrl: "/tiletech-preview.png",
+    technologies: ["Next.js 14", "TypeScript", "Tailwind CSS", "React", "Vercel", "SEO"],
+    githubUrl: "https://github.com/Pongeek/TileTech",
+    liveUrl: "https://tile-tech.vercel.app/",
+  },
+  {
+    id: 2,
     title: "Portfolio Website",
     description:
       "Full-stack portfolio built with React 18, TypeScript, and Express. Features a PostgreSQL backend with Drizzle ORM, serverless deployment to Vercel, dark/light theming with zero flash, and a rate-limited contact form with server-side validation.",
@@ -12,7 +22,7 @@ const FALLBACK_PROJECTS = [
     liveUrl: "https://maxmullo.com",
   },
   {
-    id: 2,
+    id: 3,
     title: "CoupCoupon",
     description:
       "Role-based coupon management system with three distinct user tiers: Admin, Company, and Customer. Java Spring Boot backend exposes a RESTful API secured with JWT. React/TypeScript frontend consumes the API with dynamic dashboards per role, backed by a MySQL database.",
@@ -22,7 +32,7 @@ const FALLBACK_PROJECTS = [
     liveUrl: "",
   },
   {
-    id: 3,
+    id: 4,
     title: "Billiard Game - Squeak Smalltalk",
     description:
       "Object-oriented billiard game built from scratch in Squeak Smalltalk. Implements real-time elastic collision physics, mouse-driven trajectory aiming, game-state management, and a clean separation between the physics engine and UI rendering layers.",
@@ -31,16 +41,6 @@ const FALLBACK_PROJECTS = [
     githubUrl:
       "https://github.com/Pongeek/object-oriented-programming-Squeak-Smalltalk/tree/main",
     liveUrl: "",
-  },
-  {
-    id: 4,
-    title: "TileTech",
-    description:
-      "Professional business website for a tiling and renovation company serving central Israel. Built with Next.js 14 App Router and TypeScript - features bilingual RTL/LTR support for Hebrew and English, SEO optimization with JSON-LD structured data and automatic sitemap generation, image optimization with WebP/AVIF conversion, and a validated contact form. Deployed to Vercel.",
-    imageUrl: "/tiletech-preview.png",
-    technologies: ["Next.js 14", "TypeScript", "Tailwind CSS", "React", "Vercel", "SEO"],
-    githubUrl: "https://github.com/Pongeek/TileTech",
-    liveUrl: "https://tile-tech.vercel.app/",
   },
 ];
 

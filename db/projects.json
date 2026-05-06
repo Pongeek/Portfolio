@@ -1,6 +1,15 @@
 {
   "projects": [
     {
+      "title": "TileTech",
+      "description": "Professional business website for a tiling and renovation company serving central Israel. Built with Next.js 14 App Router and TypeScript - features bilingual RTL/LTR support for Hebrew and English, SEO optimization with JSON-LD structured data and automatic sitemap generation, image optimization with WebP/AVIF conversion, and a validated contact form. Deployed to Vercel.",
+      "technologies": ["Next.js 14", "TypeScript", "Tailwind CSS", "React", "Vercel", "SEO"],
+      "imageUrl": "/tiletech-preview.png",
+      "githubUrl": "https://github.com/Pongeek/TileTech",
+      "liveUrl": "https://tile-tech.vercel.app/",
+      "createdAt": "2024-06-01T00:00:00.000Z"
+    },
+    {
       "title": "Portfolio Website",
       "description": "Full-stack portfolio built with React 18, TypeScript, and Express. Features a PostgreSQL backend with Drizzle ORM, serverless deployment to Vercel, dark/light theming with zero flash, and a rate-limited contact form with server-side validation.",
       "technologies": ["React", "TypeScript", "Tailwind CSS", "Express", "PostgreSQL"],
@@ -26,15 +35,6 @@
       "githubUrl": "https://github.com/Pongeek/object-oriented-programming-Squeak-Smalltalk/tree/main",
       "liveUrl": "",
       "createdAt": "2024-01-01T00:00:00.000Z"
-    },
-    {
-      "title": "TileTech",
-      "description": "Professional business website for a tiling and renovation company serving central Israel. Built with Next.js 14 App Router and TypeScript - features bilingual RTL/LTR support for Hebrew and English, SEO optimization with JSON-LD structured data and automatic sitemap generation, image optimization with WebP/AVIF conversion, and a validated contact form. Deployed to Vercel.",
-      "technologies": ["Next.js 14", "TypeScript", "Tailwind CSS", "React", "Vercel", "SEO"],
-      "imageUrl": "/tiletech-preview.png",
-      "githubUrl": "https://github.com/Pongeek/TileTech",
-      "liveUrl": "https://tile-tech.vercel.app/",
-      "createdAt": "2024-06-01T00:00:00.000Z"
     }
   ]
 }
