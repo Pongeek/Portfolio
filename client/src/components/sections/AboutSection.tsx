@@ -1,12 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, GraduationCap, MapPin } from "lucide-react";
 import FadeIn from "@/components/FadeIn";
-
-function scrollToSection(id: string) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: "smooth" });
-}
+import { scrollToSection } from "@/lib/scroll";
 
 export default function AboutSection() {
   return (

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ui/theme-toggle";
 import { Menu, X } from "lucide-react";
+import { scrollToSection } from "@/lib/scroll";
 
 const links = [
   { id: "about",      label: "About"      },
@@ -10,14 +11,6 @@ const links = [
   { id: "projects",   label: "Projects"   },
   { id: "contact",    label: "Contact"    },
 ];
-
-function scrollToSection(id: string, closeMobile?: () => void) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const top = el.getBoundingClientRect().top + window.scrollY - 72;
-  window.scrollTo({ top, behavior: "smooth" });
-  closeMobile?.();
-}
 
 export default function Navigation() {
   const [activeSection, setActiveSection] = useState("home");

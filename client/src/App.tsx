@@ -1,5 +1,6 @@
 import { Route, Switch } from 'wouter';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './lib/queryClient';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import ScrollProgress from './components/ScrollProgress';
@@ -8,15 +9,6 @@ import { Toaster } from './components/ui/toaster';
 import HomePage from './pages/HomePage';
 import NotFound from './pages/NotFound';
 import { ThemeProvider } from './hooks/use-theme';
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      staleTime: 1000 * 60 * 5,
-    },
-  },
-});
 
 export function App() {
   return (

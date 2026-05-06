@@ -28,6 +28,14 @@ const contactLimiter = rateLimit({
 });
 
 
+// ─── Auth guard middleware ────────────────────────────────────────────────────
+function requireAuth(req: Request, res: Response, next: express.NextFunction) {
+  if (!req.session?.userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  next();
+}
+
 export function registerRoutes(app: Express) {
   // Projects - serve from db/projects.json (source of truth), fall back to DB
   app.get("/api/projects", async (req, res) => {
@@ -62,9 +70,13 @@ export function registerRoutes(app: Express) {
     res.json(allProjects);
   });
 
-  app.post("/api/projects", async (req, res) => {
-    const project = await db.insert(projects).values(req.body).returning();
-    res.json(project[0]);
+  app.post("/api/projects", requireAuth, async (req, res) => {
+    try {
+      const project = await db.insert(projects).values(req.body).returning();
+      res.json(project[0]);
+    } catch (err) {
+      res.status(500).json({ error: "Failed to create project" });
+    }
   });
 
   // Skills
@@ -73,18 +85,26 @@ export function registerRoutes(app: Express) {
     res.json(allSkills);
   });
 
-  app.post("/api/skills", async (req, res) => {
-    const skill = await db.insert(skills).values(req.body).returning();
-    res.json(skill[0]);
+  app.post("/api/skills", requireAuth, async (req, res) => {
+    try {
+      const skill = await db.insert(skills).values(req.body).returning();
+      res.json(skill[0]);
+    } catch (err) {
+      res.status(500).json({ error: "Failed to create skill" });
+    }
   });
 
   // Profile
   app.get("/api/profile", async (req, res) => {
-    const profileData = await db.select().from(profile).limit(1);
-    res.json(profileData[0]);
+    try {
+      const profileData = await db.select().from(profile).limit(1);
+      res.json(profileData[0] ?? null);
+    } catch (err) {
+      res.status(500).json({ error: "Failed to fetch profile" });
+    }
   });
 
-  app.put("/api/profile", async (req, res) => {
+  app.put("/api/profile", requireAuth, async (req, res) => {
     const { id, ...updateData } = req.body;
     const updatedProfile = await db
       .update(profile)

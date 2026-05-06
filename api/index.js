@@ -7,10 +7,48 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// ─── Security helpers ──────────────────────────────────────────────────────────
+
+/** HTML-encode user-supplied strings before putting them in email HTML. */
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/** Simple email-format check (same rules as express-validator's isEmail). */
+function isValidEmail(email) {
+  return typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// ─── In-memory rate limiter for the contact form ──────────────────────────────
+// Allows 3 submissions per IP per 15-minute window (mirrors server/routes.ts).
+const RATE_WINDOW_MS  = 15 * 60 * 1000; // 15 min
+const RATE_MAX        = 3;
+const rateLimitMap    = new Map();        // ip -> { count, resetAt }
+
+function checkRateLimit(ip) {
+  const now   = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    return { allowed: true };
+  }
+  if (entry.count >= RATE_MAX) {
+    return { allowed: false, resetAt: entry.resetAt };
+  }
+  entry.count++;
+  return { allowed: true };
+}
+
 // Universal API handler - replaces all other API endpoints
 export default async function handler(req, res) {
-  // Enable CORS for all requests
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Restrict CORS to the production origin (or a dev override via env var)
+  const allowedOrigin = process.env.ALLOWED_ORIGIN ?? 'https://maxmullo.com';
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
@@ -321,147 +359,101 @@ function handleProfile(req, res) {
 
 // Contact form handler
 async function handleContact(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // ── Rate limiting ────────────────────────────────────────────────────────────
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() ?? req.socket?.remoteAddress ?? 'unknown';
+  const rateCheck = checkRateLimit(ip);
+  if (!rateCheck.allowed) {
+    const retryAfterSec = Math.ceil((rateCheck.resetAt - Date.now()) / 1000);
+    res.setHeader('Retry-After', retryAfterSec);
+    return res.status(429).json({
+      error: 'Too many requests',
+      message: `Please wait ${Math.ceil(retryAfterSec / 60)} minute(s) before submitting again.`,
+    });
+  }
+
   try {
-    if (req.method !== 'POST') {
-      return res.status(405).json({ error: 'Method not allowed' });
-    }
-
-    console.log('Processing contact form submission');
-    console.log('Request content type:', req.headers['content-type']);
-    
-    // Check if body exists and can be parsed
+    // ── Parse body (Vercel sometimes delivers it pre-parsed, sometimes raw) ───
     let body = req.body;
-    
-    // If the body is a string (happens sometimes with raw POSTs), try to parse it
     if (typeof body === 'string') {
-      try {
-        body = JSON.parse(body);
-        console.log('Parsed request body from string:', body);
-      } catch (e) {
-        console.error('Failed to parse body string as JSON:', e);
-      }
+      try { body = JSON.parse(body); } catch { /* fall through */ }
     } else if (!body) {
-      console.log('No request body found, attempting to read from raw stream');
       try {
-        // Read body from raw request in chunks
         const chunks = [];
-        for await (const chunk of req) {
-          chunks.push(chunk);
-        }
-        const data = Buffer.concat(chunks).toString();
-        if (data) {
-          try {
-            body = JSON.parse(data);
-            console.log('Parsed body from raw request:', body);
-          } catch (e) {
-            console.error('Failed to parse raw body as JSON:', e);
-          }
-        }
-      } catch (e) {
-        console.error('Error reading raw request body:', e);
-      }
+        for await (const chunk of req) chunks.push(chunk);
+        const raw = Buffer.concat(chunks).toString();
+        if (raw) body = JSON.parse(raw);
+      } catch { /* fall through */ }
     }
-    
+
     if (!body) {
-      console.log('No request body could be parsed');
-      return res.status(200).json({ 
-        message: 'Message received successfully',
-        note: 'No message content was provided.'
-      });
-    }
-    
-    // Try to extract fields from various possible locations
-    const name = body.name;
-    const email = body.email;
-    const message = body.message;
-
-    if (!name || !email || !message) {
-      console.log('Missing required fields in contact form submission');
-      console.log('Body contents:', body);
-      return res.status(200).json({ 
-        message: 'Message received successfully',
-        note: 'Some required fields were missing, but we recorded what was provided.'
-      });
+      return res.status(400).json({ error: 'Request body is required' });
     }
 
-    // Detailed logging for debugging
-    console.log('=============== CONTACT FORM SUBMISSION ===============');
-    console.log('Name:', name);
-    console.log('Email:', email);
-    console.log('Message:', message);
-    
-    // Always send back a success response to the user, regardless of what happens next
-    // This ensures the user gets a good experience even if email sending fails
-    
-    // Check SendGrid configuration in a way that won't throw errors
-    const hasApiKey = !!process.env.SENDGRID_API_KEY;
-    const hasFromEmail = !!process.env.SENDGRID_FROM_EMAIL;
-    
-    console.log('SendGrid API Key configured:', hasApiKey);
-    console.log('SendGrid FROM Email configured:', hasFromEmail);
-    
-    if (hasApiKey && process.env.SENDGRID_API_KEY.startsWith('SG.')) {
-      console.log('API Key format looks correct (starts with SG.)');
+    // ── Input validation (mirrors server/routes.ts rules) ────────────────────
+    const { name, email, message } = body;
+    const errors = [];
+
+    if (!name || typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 100) {
+      errors.push({ field: 'name', message: 'Name must be between 2 and 100 characters' });
+    }
+    if (!email || !isValidEmail(String(email).trim())) {
+      errors.push({ field: 'email', message: 'A valid email address is required' });
+    }
+    if (!message || typeof message !== 'string' || message.trim().length < 10 || message.trim().length > 1000) {
+      errors.push({ field: 'message', message: 'Message must be between 10 and 1000 characters' });
     }
 
-    if (!hasApiKey) {
-      console.log('ERROR: SendGrid API key is missing. Cannot send email.');
-      // Instead of returning here, we'll continue and just log this error
-      
-      // Store the message in the server logs at minimum
-      return res.status(200).json({ 
-        message: 'Message received successfully',
-        note: 'Thank you for your message. I will get back to you soon!'
-      });
+    if (errors.length > 0) {
+      return res.status(400).json({ error: 'Validation failed', errors });
     }
 
-    // Configure SendGrid - catch any errors here to prevent crashes
-    try {
-      // Only try to use SendGrid if we have an API key
-      if (hasApiKey) {
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-        
-        const fromEmail = process.env.SENDGRID_FROM_EMAIL || 'portfolio@example.com';
-        
-        console.log('Using FROM email:', fromEmail);
-        console.log('Sending TO email: MaximPim95@gmail.com');
+    const safeName    = name.trim();
+    const safeEmail   = email.trim().toLowerCase();
+    const safeMessage = message.trim();
 
-        const msg = {
-          to: 'MaximPim95@gmail.com',
-          from: fromEmail,
-          subject: `Portfolio Contact Form: Message from ${name}`,
-          text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-          html: `
-            <h3>New message from portfolio contact form</h3>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Message:</strong></p>
-            <p>${message.replace(/\n/g, '<br>')}</p>
-          `
-        };
+    // ── Send email via SendGrid ───────────────────────────────────────────────
+    const apiKey = process.env.SENDGRID_API_KEY;
+    const toEmail = process.env.CONTACT_EMAIL ?? 'MaximPim95@gmail.com';
 
-        // Send the email - wrap in try/catch to prevent crashing
-        console.log('Attempting to send email via SendGrid...');
-        await sgMail.send(msg);
-        console.log('Email sent successfully!');
-      }
-    } catch (emailError) {
-      console.error('Error sending email:', emailError);
-      // Log the error but don't let it affect the response to the user
+    if (!apiKey) {
+      console.error('[contact] SENDGRID_API_KEY is not set');
+      // Still acknowledge receipt — the message was validated; just can't email
+      return res.status(200).json({ success: true, message: 'Message received. Thank you!' });
     }
-    
-    // Always return success to the user
-    return res.status(200).json({ 
-      message: 'Thank you for your message. I will get back to you soon!' 
+
+    sgMail.setApiKey(apiKey);
+    const fromEmail = process.env.SENDGRID_FROM_EMAIL ?? toEmail;
+
+    // HTML-escape all user input before interpolating into HTML (C4 fix)
+    const eName    = escapeHtml(safeName);
+    const eEmail   = escapeHtml(safeEmail);
+    const eMessage = escapeHtml(safeMessage).replace(/\n/g, '<br>');
+
+    await sgMail.send({
+      to:      toEmail,
+      from:    fromEmail,
+      replyTo: safeEmail,
+      subject: `Portfolio Contact: Message from ${safeName}`,
+      text:    `From: ${safeName}\nEmail: ${safeEmail}\n\nMessage:\n${safeMessage}`,
+      html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;line-height:1.6;color:#333">
+        <h2 style="color:#2563eb">New Contact Form Submission</h2>
+        <p><strong>From:</strong> ${eName}</p>
+        <p><strong>Email:</strong> ${eEmail}</p>
+        <p><strong>Message:</strong></p>
+        <div style="background:#f9fafb;padding:15px;border-radius:5px;margin:10px 0">${eMessage}</div>
+      </body></html>`,
+      trackingSettings: { clickTracking: { enable: false }, openTracking: { enable: false } },
     });
-    
+
+    return res.status(200).json({ success: true, message: 'Thank you for your message. I will get back to you soon!' });
+
   } catch (error) {
-    // Catch any other errors to prevent the function from crashing
-    console.error('Unexpected error in contact handler:', error);
-    return res.status(200).json({ 
-      message: 'Message received',
-      note: 'There was an unexpected issue, but we recorded your message.'
-    });
+    console.error('[contact] Unexpected error:', error?.message ?? error);
+    return res.status(500).json({ error: 'Failed to send message. Please try again later.' });
   }
 }
 

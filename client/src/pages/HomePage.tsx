@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchProfile, fetchSkills, fetchProjects } from "@/lib/api";
+import { fetchSkills, fetchProjects } from "@/lib/api";
 import type { Skill, Project } from "@db/schema";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
@@ -10,8 +10,6 @@ import ExperienceSection from "@/components/sections/ExperienceSection";
 import SectionDivider from "@/components/SectionDivider";
 
 export default function HomePage() {
-  // Profile query kept for future use (bio, social links from DB)
-  useQuery({ queryKey: ["profile"], queryFn: fetchProfile });
   const { data: skills } = useQuery<Skill[]>({ queryKey: ["skills"], queryFn: fetchSkills });
   const { data: projects } = useQuery<Project[]>({ queryKey: ["projects"], queryFn: fetchProjects });
 

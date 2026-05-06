@@ -144,9 +144,18 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 });
 
 const MemoryStoreSession = MemoryStore(session);
+
+const SESSION_SECRET = process.env.SESSION_SECRET;
+if (!SESSION_SECRET && process.env.NODE_ENV === "production") {
+  console.error("FATAL: SESSION_SECRET env var is not set in production.");
+  process.exit(1);
+} else if (!SESSION_SECRET) {
+  console.warn("⚠ SESSION_SECRET not set — using insecure default (dev only).");
+}
+
 app.use(
   session({
-    secret: "your-secret-key",
+    secret: SESSION_SECRET ?? "dev-only-insecure-secret-change-me",
     resave: false,
     saveUninitialized: false,
     store: new MemoryStoreSession({
