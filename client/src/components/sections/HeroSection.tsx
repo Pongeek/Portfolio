@@ -89,7 +89,7 @@ function CodeCard() {
     return () => clearInterval(t);
   }, []);
 
-  // Typing animation — kicks in after a short settle delay
+  // Typing animation - kicks in after a short settle delay
   useEffect(() => {
     let intervalId: ReturnType<typeof setInterval> | undefined;
     const timeoutId = setTimeout(() => {
@@ -106,7 +106,7 @@ function CodeCard() {
     };
   }, []);
 
-  // Mouse-tracking tilt — listens on the whole hero section
+  // Mouse-tracking tilt - listens on the whole hero section
   useEffect(() => {
     const section = cardRef.current?.closest("section") as HTMLElement | null;
     if (!section) return;
@@ -133,7 +133,7 @@ function CodeCard() {
     };
   }, []);
 
-  // Build visible lines — charBudget tracks how many chars are left to allocate
+  // Build visible lines - charBudget tracks how many chars are left to allocate
   let charBudget = revealed;
   const renderedLines = CODE_LINES.map((line, i) => {
     // Line 0 always rendered (cursor ready before typing starts).
@@ -142,7 +142,7 @@ function CodeCard() {
     if (!lineVisible) return null;
 
     if (line.tokens.length === 0) {
-      // Empty spacer line — no budget consumed
+      // Empty spacer line - no budget consumed
       return (
         <div key={i}><span>&nbsp;</span></div>
       );
@@ -208,7 +208,7 @@ export default function HeroSection() {
       {/* Background layers */}
       <div className="absolute inset-0 hero-dot-grid opacity-40 pointer-events-none" />
 
-      {/* Right orb — parallax wrapper (scroll) + inner float animation */}
+      {/* Right orb - parallax wrapper (scroll) + inner float animation */}
       <div
         className="absolute top-1/4 right-0 w-[600px] h-[600px] pointer-events-none"
         style={{ transform: `translateY(${scrollY * 0.28}px)`, willChange: "transform" }}
@@ -219,7 +219,7 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* Left orb — slightly slower parallax for depth layering */}
+      {/* Left orb - slightly slower parallax for depth layering */}
       <div
         className="absolute bottom-1/4 left-0 w-[500px] h-[400px] pointer-events-none"
         style={{ transform: `translateY(${scrollY * 0.16}px)`, willChange: "transform" }}
@@ -230,7 +230,7 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* Content — two-column on lg+ */}
+      {/* Content - two-column on lg+ */}
       <div className="container mx-auto px-4 md:px-6 pt-24 pb-20 relative z-10">
         <div className="flex flex-col lg:flex-row lg:items-center lg:gap-16">
 
@@ -262,7 +262,7 @@ export default function HeroSection() {
 
             <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-7 animate-fade-up"
                style={{ animationDelay: "0.16s" }}>
-              I build clean, scalable web applications end-to-end — responsive React frontends,
+              I build clean, scalable web applications end-to-end - responsive React frontends,
               robust Java Spring and Node.js backends, and everything in between.
             </p>
 

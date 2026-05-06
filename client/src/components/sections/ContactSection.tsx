@@ -45,7 +45,7 @@ export default function ContactSection() {
       toast({ title: "Email copied!", description: EMAIL });
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // clipboard API not available — mailto fallback is still there
+      // clipboard API not available - mailto fallback is still there
     }
   };
 
@@ -94,7 +94,7 @@ export default function ContactSection() {
               </button>
             </p>
 
-            {/* Social links — quick one-click alternatives to the form */}
+            {/* Social links - quick one-click alternatives to the form */}
             <div className="flex items-center justify-center gap-3 mb-10">
               <a
                 href="https://github.com/Pongeek"

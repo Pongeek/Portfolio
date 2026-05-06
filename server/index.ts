@@ -195,7 +195,7 @@ const PORT = process.env.PORT || process.env.NODE_ENV === "production" ? 3000 : 
 
 // ─── Sync canonical data into the live PostgreSQL database ────────────────────
 // Runs once on every startup. Safe to re-run: projects matched by githubUrl,
-// skills matched by name — no duplicates, just inserts + updates.
+// skills matched by name - no duplicates, just inserts + updates.
 async function syncFromJson() {
   try {
     // ── Projects ────────────────────────────────────────────────────────────
@@ -233,7 +233,7 @@ async function syncFromJson() {
           ins++;
         }
       }
-      console.log(`Projects synced — inserted: ${ins}, updated: ${upd}`);
+      console.log(`Projects synced - inserted: ${ins}, updated: ${upd}`);
     }
 
     // ── Skills ──────────────────────────────────────────────────────────────
@@ -275,10 +275,10 @@ async function syncFromJson() {
         sIns++;
       }
     }
-    console.log(`Skills synced  — inserted: ${sIns}, updated: ${sUpd}`);
+    console.log(`Skills synced  - inserted: ${sIns}, updated: ${sUpd}`);
 
   } catch (err) {
-    // Non-fatal — server still starts even if sync fails
+    // Non-fatal - server still starts even if sync fails
     console.error("syncFromJson error:", err instanceof Error ? err.message : String(err));
   }
 }
@@ -294,7 +294,7 @@ async function startServer() {
         console.error('Missing required environment variables. Server will not start.');
         process.exit(1);
       } else {
-        console.warn('⚠ Some environment variables are missing — running in dev mode without DB/email.');
+        console.warn('⚠ Some environment variables are missing - running in dev mode without DB/email.');
       }
     }
 
@@ -305,10 +305,10 @@ async function startServer() {
           console.error('Failed to connect to database. Server will not start.');
           process.exit(1);
         } else {
-          console.warn('⚠ Database unavailable — API endpoints will use client-side fallback data.');
+          console.warn('⚠ Database unavailable - API endpoints will use client-side fallback data.');
         }
       } else {
-        // DB is live — upsert projects & skills from canonical JSON/list
+        // DB is live - upsert projects & skills from canonical JSON/list
         await syncFromJson();
       }
     }

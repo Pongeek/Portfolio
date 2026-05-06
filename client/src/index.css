@@ -28,7 +28,7 @@
   }
 
   .dark {
-    /* Deep navy — professional dark theme */
+    /* Deep navy - professional dark theme */
     --background: 217 33% 7%;
     --foreground: 210 40% 96%;
     --card: 217 28% 11%;
@@ -67,7 +67,36 @@
     @apply antialiased bg-background text-foreground transition-colors duration-200;
   }
 
-  /* Keyboard focus — visible ring, hidden for mouse clicks */
+  /* ─── Custom scrollbar - thin teal on navy ─────────────────
+     Firefox uses scrollbar-width / scrollbar-color; everything
+     else honors the ::-webkit-scrollbar pseudo-elements. */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.45) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--primary) / 0.35);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background-color 0.2s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--primary) / 0.6);
+  }
+
+  /* Keyboard focus - visible ring, hidden for mouse clicks */
   :focus-visible {
     outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;

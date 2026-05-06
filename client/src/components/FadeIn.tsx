@@ -4,7 +4,7 @@ import type { ReactNode, CSSProperties } from "react";
 interface FadeInProps {
   children: ReactNode;
   className?: string;
-  /** Delay in ms before the transition starts — use for staggered children */
+  /** Delay in ms before the transition starts - use for staggered children */
   delay?: number;
   /** Direction to slide from */
   from?: "bottom" | "left" | "right" | "none";

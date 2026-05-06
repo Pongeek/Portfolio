@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Github, ExternalLink } from "lucide-react";
 import { useCardTilt } from "@/hooks/useCardTilt";
+import BlurImage from "@/components/BlurImage";
 import type { Project } from "@db/schema";
 
 interface ProjectsSectionProps {
@@ -108,13 +109,13 @@ function FeaturedProjectCard({ project }: { project: Project }) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5">
-          {/* Image — 3 / 5 columns on lg+ */}
+          {/* Image - 3 / 5 columns on lg+ */}
           <div className="lg:col-span-3 aspect-video lg:aspect-auto min-h-[220px] overflow-hidden bg-muted relative">
-            <img
+            <BlurImage
               src={project.imageUrl || "/max-profile.png"}
               alt={`${project.title} screenshot`}
               loading="lazy"
-              className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+              className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-[1.03] group-hover:duration-700"
               onError={(e) => { (e.target as HTMLImageElement).src = "/max-profile.png"; }}
             />
             {/* Live badge on featured image */}
@@ -134,7 +135,7 @@ function FeaturedProjectCard({ project }: { project: Project }) {
               bg-gradient-to-r from-transparent to-card/80 pointer-events-none" />
           </div>
 
-          {/* Content — 2 / 5 columns on lg+ */}
+          {/* Content - 2 / 5 columns on lg+ */}
           <div className="lg:col-span-2 flex flex-col justify-between p-7 gap-6">
             <div className="space-y-4">
               <h3 className="font-display text-2xl font-bold text-foreground leading-snug">

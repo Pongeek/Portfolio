@@ -23,7 +23,7 @@ const FALLBACK_PROJECTS = [
   },
   {
     id: 3,
-    title: "Billiard Game — Squeak Smalltalk",
+    title: "Billiard Game - Squeak Smalltalk",
     description:
       "Object-oriented billiard game built from scratch in Squeak Smalltalk. Implements real-time elastic collision physics, mouse-driven trajectory aiming, game-state management, and a clean separation between the physics engine and UI rendering layers.",
     imageUrl: "/billiardTable.png",
@@ -36,7 +36,7 @@ const FALLBACK_PROJECTS = [
     id: 4,
     title: "TileTech",
     description:
-      "Professional business website for a tiling and renovation company serving central Israel. Built with Next.js 14 App Router and TypeScript — features bilingual RTL/LTR support for Hebrew and English, SEO optimization with JSON-LD structured data and automatic sitemap generation, image optimization with WebP/AVIF conversion, and a validated contact form. Deployed to Vercel.",
+      "Professional business website for a tiling and renovation company serving central Israel. Built with Next.js 14 App Router and TypeScript - features bilingual RTL/LTR support for Hebrew and English, SEO optimization with JSON-LD structured data and automatic sitemap generation, image optimization with WebP/AVIF conversion, and a validated contact form. Deployed to Vercel.",
     imageUrl: "/tiletech-preview.png",
     technologies: ["Next.js 14", "TypeScript", "Tailwind CSS", "React", "Vercel", "SEO"],
     githubUrl: "https://github.com/Pongeek/TileTech",
@@ -109,7 +109,7 @@ export async function fetchProfile() {
 
 /**
  * Submit the contact form.
- * Throws on failure so the mutation's onError handler fires properly —
+ * Throws on failure so the mutation's onError handler fires properly -
  * we never silently pretend a message was sent when it wasn't.
  */
 export async function submitContact(data: {

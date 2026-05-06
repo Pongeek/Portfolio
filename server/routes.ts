@@ -29,7 +29,7 @@ const contactLimiter = rateLimit({
 
 
 export function registerRoutes(app: Express) {
-  // Projects — serve from db/projects.json (source of truth), fall back to DB
+  // Projects - serve from db/projects.json (source of truth), fall back to DB
   app.get("/api/projects", async (req, res) => {
     try {
       const jsonPath = path.join(process.cwd(), "db", "projects.json");

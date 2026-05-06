@@ -95,7 +95,7 @@ export default function Navigation() {
             Max<span className="text-primary">.</span>
           </button>
 
-          {/* Desktop nav — sliding pill indicator */}
+          {/* Desktop nav - sliding pill indicator */}
           <nav ref={navRef} className="hidden md:flex items-center gap-1 relative">
             {/* Sliding background pill */}
             <div
@@ -129,7 +129,7 @@ export default function Navigation() {
           {/* Right side */}
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            {/* Hamburger — mobile only */}
+            {/* Hamburger - mobile only */}
             <button
               className="md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
               onClick={() => setMobileOpen((o) => !o)}
@@ -141,7 +141,7 @@ export default function Navigation() {
           </div>
         </div>
 
-        {/* Mobile menu — slides down */}
+        {/* Mobile menu - slides down */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             mobileOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"

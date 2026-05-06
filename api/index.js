@@ -194,7 +194,7 @@ async function handleFileServing(req, res, params) {
   return res.status(200).send(fileBuffer);
 }
 
-// Projects data handler — reads db/projects.json (single source of truth),
+// Projects data handler - reads db/projects.json (single source of truth),
 // falls back to inline data if the file isn't available.
 function handleProjects(req, res) {
   if (req.method !== 'GET') {
@@ -229,7 +229,7 @@ function handleProjects(req, res) {
     console.error('Failed to read projects.json, using inline fallback:', err);
   }
 
-  // Inline fallback — keep this in sync with db/projects.json
+  // Inline fallback - keep this in sync with db/projects.json
   return res.status(200).json([
     {
       id: 1,
@@ -251,7 +251,7 @@ function handleProjects(req, res) {
     },
     {
       id: 3,
-      title: "Billiard Game — Squeak Smalltalk",
+      title: "Billiard Game - Squeak Smalltalk",
       description: "Object-oriented billiard game built from scratch in Squeak Smalltalk. Implements real-time elastic collision physics, mouse-driven trajectory aiming, game-state management, and a clean separation between the physics engine and UI rendering layers.",
       imageUrl: "/billiardTable.png",
       technologies: ["Squeak Smalltalk", "OOP", "Physics Simulation", "Game Development"],
@@ -261,7 +261,7 @@ function handleProjects(req, res) {
     {
       id: 4,
       title: "TileTech",
-      description: "Professional business website for a tiling and renovation company serving central Israel. Built with Next.js 14 App Router and TypeScript — features bilingual RTL/LTR support for Hebrew and English, SEO optimization with JSON-LD structured data and automatic sitemap generation, image optimization with WebP/AVIF conversion, and a validated contact form. Deployed to Vercel.",
+      description: "Professional business website for a tiling and renovation company serving central Israel. Built with Next.js 14 App Router and TypeScript - features bilingual RTL/LTR support for Hebrew and English, SEO optimization with JSON-LD structured data and automatic sitemap generation, image optimization with WebP/AVIF conversion, and a validated contact form. Deployed to Vercel.",
       imageUrl: "/tiletech-preview.png",
       technologies: ["Next.js 14", "TypeScript", "Tailwind CSS", "React", "Vercel", "SEO"],
       githubUrl: "https://github.com/Pongeek/TileTech",
@@ -276,7 +276,7 @@ function handleSkills(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
   
-  // Canonical skills list — keep in sync with server/index.ts CANONICAL_SKILLS
+  // Canonical skills list - keep in sync with server/index.ts CANONICAL_SKILLS
   return res.status(200).json([
     { id: 1,  name: "JavaScript",   category: "Frontend" },
     { id: 2,  name: "TypeScript",   category: "Frontend" },

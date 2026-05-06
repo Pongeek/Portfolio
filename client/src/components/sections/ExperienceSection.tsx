@@ -31,7 +31,7 @@ const TIMELINE: TimelineItem[] = [
     type: "Education",
     icon: Code2,
     description:
-      "Completed an intensive bootcamp focused on building real-world full stack applications. Main project: a coupon management system with three user roles (Admin, Company, Customer) — Java Spring backend, MySQL database, React and TypeScript frontend.",
+      "Completed an intensive bootcamp focused on building real-world full stack applications. Main project: a coupon management system with three user roles (Admin, Company, Customer) - Java Spring backend, MySQL database, React and TypeScript frontend.",
     tags: ["Java", "Spring Boot", "React", "TypeScript", "MySQL", "REST APIs", "Redux"],
   },
   {
@@ -40,7 +40,7 @@ const TIMELINE: TimelineItem[] = [
     type: "Work",
     icon: Headphones,
     description:
-      "Supported users and investigated technical issues for web applications and internal systems inside a bank — an environment where reliability and accuracy are non-negotiable. Gained first-hand experience with how production software behaves under real business pressure.",
+      "Supported users and investigated technical issues for web applications and internal systems inside a bank - an environment where reliability and accuracy are non-negotiable. Gained first-hand experience with how production software behaves under real business pressure.",
     tags: ["Technical Support", "Incident Management", "Banking Systems", "Troubleshooting"],
   },
   {
@@ -49,7 +49,7 @@ const TIMELINE: TimelineItem[] = [
     type: "Work",
     icon: Shield,
     description:
-      "Monitored security alerts, investigated incidents, and followed operational security procedures in a banking environment. This role sharpened analytical thinking and attention to detail, and gave me a security-first perspective — thinking not only about how to build software, but how to make it safer.",
+      "Monitored security alerts, investigated incidents, and followed operational security procedures in a banking environment. This role sharpened analytical thinking and attention to detail, and gave me a security-first perspective - thinking not only about how to build software, but how to make it safer.",
     tags: ["Cybersecurity", "SOC", "Incident Response", "Security Monitoring"],
   },
   {
@@ -87,8 +87,8 @@ export default function ExperienceSection() {
             </div>
             <p className="text-muted-foreground text-center leading-relaxed mb-16 max-w-2xl mx-auto">
               Computer Science studies gave me the foundation. A full stack bootcamp turned that into
-              practical skills. Professional experience in banking — in both technical support and
-              cybersecurity — taught me how software behaves in the real world. Now I'm focused on
+              practical skills. Professional experience in banking - in both technical support and
+              cybersecurity - taught me how software behaves in the real world. Now I'm focused on
               combining all of it to build things that matter.
             </p>
           </FadeIn>

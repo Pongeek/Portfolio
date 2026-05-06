@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Github, Globe } from "lucide-react";
 import type { Project } from "@db/schema";
 import { useCardTilt } from "@/hooks/useCardTilt";
+import BlurImage from "@/components/BlurImage";
 
 type ProjectCardProps = {
   title: Project["title"];
@@ -32,7 +33,7 @@ export default function ProjectCard({
   const { ref, onMouseMove, onMouseLeave } = useCardTilt();
 
   return (
-    // Tilt wrapper — transform is applied here so the card's own border/shadow animates too
+    // Tilt wrapper - transform is applied here so the card's own border/shadow animates too
     <div
       ref={ref}
       onMouseMove={onMouseMove}
@@ -41,18 +42,18 @@ export default function ProjectCard({
       style={{ willChange: "transform" }}
     >
       <Card className="group flex flex-col w-full h-full overflow-hidden border-border/60 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-[border-color,box-shadow] duration-300">
-        {/* Image — 16:9 aspect ratio, zoom on hover */}
+        {/* Image - 16:9 aspect ratio, zoom on hover, blur-up on load */}
         <div className="relative aspect-video overflow-hidden bg-muted">
-          <img
+          <BlurImage
             src={imageUrl || "/max-profile.png"}
             alt={`${title} screenshot`}
             loading="lazy"
-            className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+            className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 group-hover:duration-500"
             onError={(e) => {
               (e.target as HTMLImageElement).src = "/max-profile.png";
             }}
           />
-          {/* Live badge — shown when the project has a live URL */}
+          {/* Live badge - shown when the project has a live URL */}
           {hasLiveDemo && (
             <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5
               px-2.5 py-1 rounded-full

@@ -91,7 +91,7 @@ export function setupDevDb() {
     try {
       projectsData = JSON.parse(fs.readFileSync(path.join(__dirname, 'projects.json'), 'utf8'));
     } catch {
-      console.log('No projects.json found — skipping project seed from file.');
+      console.log('No projects.json found - skipping project seed from file.');
     }
 
     if (projectsData && projectsData.projects && projectsData.projects.length > 0) {

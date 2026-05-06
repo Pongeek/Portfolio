@@ -6,18 +6,18 @@ export default function Footer() {
       <div className="container mx-auto px-4 md:px-6 py-7">
         <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-5 text-center md:text-left">
 
-          {/* Left — copyright */}
+          {/* Left - copyright */}
           <p className="text-sm text-muted-foreground order-3 md:order-1">
             © {new Date().getFullYear()} Max Mullokandov
           </p>
 
-          {/* Centre — built-by credit */}
+          {/* Centre - built-by credit */}
           <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground/60 order-2">
             Designed &amp; built by Max Mullokandov
             <Heart className="h-3 w-3 text-primary/80 fill-primary/80 flex-shrink-0" />
           </p>
 
-          {/* Right — social/contact icons */}
+          {/* Right - social/contact icons */}
           <div className="flex items-center justify-center md:justify-end gap-1 order-1 md:order-3">
             <a
               href="https://github.com/Pongeek"
