@@ -5,6 +5,7 @@ import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import ScrollProgress from './components/ScrollProgress';
 import BackToTop from './components/BackToTop';
+import ErrorBoundary from './components/ErrorBoundary';
 import { Toaster } from './components/ui/toaster';
 import HomePage from './pages/HomePage';
 import NotFound from './pages/NotFound';
@@ -30,10 +31,12 @@ export function App() {
           <ScrollProgress />
           <Navigation />
           <main id="main">
-            <Switch>
-              <Route path="/" component={HomePage} />
-              <Route component={NotFound} />
-            </Switch>
+            <ErrorBoundary>
+              <Switch>
+                <Route path="/" component={HomePage} />
+                <Route component={NotFound} />
+              </Switch>
+            </ErrorBoundary>
           </main>
           <Footer />
           <BackToTop />
