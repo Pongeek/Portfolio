@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, GraduationCap, MapPin } from "lucide-react";
 import FadeIn from "@/components/FadeIn";
+import SectionHeader from "@/components/SectionHeader";
 import { scrollToSection } from "@/lib/scroll";
 
 export default function AboutSection() {
@@ -9,14 +10,7 @@ export default function AboutSection() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-5xl mx-auto">
 
-          {/* Heading */}
-          <FadeIn>
-            <div className="flex items-center gap-4 mb-20">
-              <span className="h-px flex-1 bg-border" />
-              <h2 className="font-display text-4xl font-bold">About Me</h2>
-              <span className="h-px flex-1 bg-border" />
-            </div>
-          </FadeIn>
+          <SectionHeader eyebrow="01 / About" title="About Me" />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 

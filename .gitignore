@@ -49,3 +49,4 @@ logs
 *.dll
 *.so
 *.dylib 
+.vercel

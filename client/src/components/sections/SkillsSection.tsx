@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SkillBar from "@/components/SkillBar";
 import FadeIn from "@/components/FadeIn";
+import SectionHeader from "@/components/SectionHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Skill } from "@db/schema";
 
@@ -77,14 +78,11 @@ export default function SkillsSection({ skills }: SkillsSectionProps) {
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-5xl mx-auto">
 
-          <FadeIn>
-            <h2 className="font-display text-4xl font-bold mb-4 text-center">
-              Technical Skills
-            </h2>
-            <p className="text-muted-foreground text-center mb-12 max-w-lg mx-auto">
-              Technologies I work with regularly and have shipped to production.
-            </p>
-          </FadeIn>
+          <SectionHeader
+            eyebrow="03 / Skills"
+            title="Technical Skills"
+            description="Technologies I work with regularly and have shipped to production."
+          />
 
           {!skills ? (
             <SkillsSkeleton />

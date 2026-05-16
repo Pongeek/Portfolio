@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import FadeIn from "@/components/FadeIn";
+import SectionHeader from "@/components/SectionHeader";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -74,11 +75,13 @@ export default function ContactSection() {
     <section id="contact" className="py-28">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-2xl mx-auto">
+          <SectionHeader
+            eyebrow="05 / Contact"
+            title="Get in Touch"
+            description="Open to new opportunities, collaborations, or just a conversation."
+          />
+
           <FadeIn>
-            <h2 className="font-display text-4xl font-bold mb-4 text-center">Get in Touch</h2>
-            <p className="text-muted-foreground text-center mb-3">
-              Open to new opportunities, collaborations, or just a conversation.
-            </p>
             <p className="text-center mb-8">
               <button
                 onClick={copyEmail}

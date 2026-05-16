@@ -1,6 +1,7 @@
 import ProjectCard from "@/components/ProjectCard";
 import FeaturedProjectCard from "@/components/FeaturedProjectCard";
 import FadeIn from "@/components/FadeIn";
+import SectionHeader from "@/components/SectionHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Project } from "@db/schema";
 
@@ -86,12 +87,11 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
     <section id="projects" className="py-28 bg-muted/20">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-6xl mx-auto">
-          <FadeIn>
-            <h2 className="font-display text-4xl font-bold mb-4 text-center">My Projects</h2>
-            <p className="text-muted-foreground text-center mb-16 max-w-lg mx-auto">
-              A selection of things I've designed, built, and shipped.
-            </p>
-          </FadeIn>
+          <SectionHeader
+            eyebrow="04 / Work"
+            title="My Projects"
+            description="A selection of things I've designed, built, and shipped."
+          />
 
           {/* Featured card (skeleton while loading) */}
           {!projects && <FeaturedCardSkeleton />}

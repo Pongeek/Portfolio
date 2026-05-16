@@ -1,12 +1,48 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Github, Linkedin, Mail, ArrowRight, Download } from "lucide-react";
+import {
+  Github,
+  Linkedin,
+  Mail,
+  ArrowRight,
+  Download,
+  Calendar,
+  Rocket,
+  Layers,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import {
+  SiReact,
+  SiTypescript,
+  SiNodedotjs,
+  SiSpring,
+  SiTailwindcss,
+  SiPostgresql,
+} from "react-icons/si";
 import { useInView } from "@/hooks/use-in-view";
 import { scrollToSection } from "@/lib/scroll";
 import CodeCard from "@/components/CodeCard";
 
-// ─── Animated counter ─────────────────────────────────────────────────────────
-function AnimatedStat({ display, label }: { display: string; label: string }) {
+// ─── Tech stack chips shown under the description ─────────────────────────────
+const TECH_STACK = [
+  { name: "React",      Icon: SiReact,       hoverColor: "group-hover:text-[#61DAFB]" },
+  { name: "TypeScript", Icon: SiTypescript,  hoverColor: "group-hover:text-[#3178C6]" },
+  { name: "Node.js",    Icon: SiNodedotjs,   hoverColor: "group-hover:text-[#5FA04E]" },
+  { name: "Spring",     Icon: SiSpring,      hoverColor: "group-hover:text-[#6DB33F]" },
+  { name: "Tailwind",   Icon: SiTailwindcss, hoverColor: "group-hover:text-[#38BDF8]" },
+  { name: "Postgres",   Icon: SiPostgresql,  hoverColor: "group-hover:text-[#4169E1]" },
+];
+
+// ─── Animated stat card ───────────────────────────────────────────────────────
+function AnimatedStat({
+  display,
+  label,
+  icon: Icon,
+}: {
+  display: string;
+  label: string;
+  icon: LucideIcon;
+}) {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.5 });
   const [count, setCount] = useState(0);
 
@@ -29,19 +65,32 @@ function AnimatedStat({ display, label }: { display: string; label: string }) {
   }, [inView, target]);
 
   return (
-    <div ref={ref} className="flex items-baseline gap-1.5 text-sm">
-      <span className="font-semibold text-foreground tabular-nums">
+    <div
+      ref={ref}
+      className="group relative flex-1 min-w-[110px] flex flex-col gap-1 rounded-xl
+        border border-border bg-card/90 backdrop-blur-sm px-4 py-3 shadow-sm
+        hover:border-primary/50 hover:bg-card hover:shadow-md hover:shadow-primary/10
+        hover:-translate-y-0.5 transition-all duration-300"
+    >
+      <Icon
+        className="absolute top-3 right-3 h-4 w-4 text-muted-foreground/60
+          group-hover:text-primary transition-colors"
+        aria-hidden="true"
+      />
+      <span className="font-display text-2xl font-bold text-foreground tabular-nums leading-none">
         {target !== null ? `${count}${suffix}` : display}
       </span>
-      <span className="text-muted-foreground">{label}</span>
+      <span className="text-[11px] font-mono text-muted-foreground tracking-wide leading-tight">
+        {label}
+      </span>
     </div>
   );
 }
 
-const STATS = [
-  { display: "3+",        label: "Years Coding"       },
-  { display: "5+",        label: "Projects Shipped"   },
-  { display: "Full Stack", label: "Frontend & Backend" },
+const STATS: { display: string; label: string; icon: LucideIcon }[] = [
+  { display: "3+",         label: "Years Coding",       icon: Calendar },
+  { display: "5+",         label: "Projects Shipped",   icon: Rocket   },
+  { display: "Full Stack", label: "Frontend & Backend", icon: Layers   },
 ];
 
 // ─── Hero section ──────────────────────────────────────────────────────────────
@@ -129,11 +178,36 @@ export default function HeroSection() {
               robust Java Spring and Node.js backends, and everything in between.
             </p>
 
+            {/* Tech stack strip */}
+            <div className="mb-8 animate-fade-up"
+                 style={{ animationDelay: "0.18s" }}>
+              <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-3">
+                Working with
+              </p>
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+                {TECH_STACK.map(({ name, Icon, hoverColor }) => (
+                  <div
+                    key={name}
+                    className="group flex items-center gap-1.5 cursor-default"
+                    title={name}
+                  >
+                    <Icon
+                      className={`h-4 w-4 text-muted-foreground transition-colors duration-300 ${hoverColor}`}
+                      aria-hidden="true"
+                    />
+                    <span className="text-xs font-mono text-muted-foreground group-hover:text-foreground transition-colors duration-300">
+                      {name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Stats strip */}
-            <div className="flex flex-wrap gap-x-7 gap-y-2 mb-10 animate-fade-up"
-                 style={{ animationDelay: "0.20s" }}>
+            <div className="flex flex-wrap gap-3 mb-10 animate-fade-up"
+                 style={{ animationDelay: "0.22s" }}>
               {STATS.map((s) => (
-                <AnimatedStat key={s.label} display={s.display} label={s.label} />
+                <AnimatedStat key={s.label} display={s.display} label={s.label} icon={s.icon} />
               ))}
             </div>
 
@@ -178,7 +252,7 @@ export default function HeroSection() {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground/40 animate-bounce">
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground/70 animate-bounce">
         <span className="text-[10px] font-mono tracking-[0.25em] uppercase">Scroll</span>
         <svg width="16" height="24" viewBox="0 0 16 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
           <rect x="1" y="1" width="14" height="22" rx="7" />

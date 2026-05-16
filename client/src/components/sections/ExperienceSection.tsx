@@ -1,6 +1,7 @@
 import { GraduationCap, Code2, Headphones, Shield, Laptop } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import FadeIn from "@/components/FadeIn";
+import SectionHeader from "@/components/SectionHeader";
 import type { ComponentType } from "react";
 
 // ─── Timeline data ─────────────────────────────────────────────────────────────
@@ -85,20 +86,11 @@ export default function ExperienceSection() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto">
 
-          {/* Heading */}
-          <FadeIn>
-            <div className="flex items-center gap-4 mb-8">
-              <span className="h-px flex-1 bg-border" />
-              <h2 className="font-display text-4xl font-bold">My Journey</h2>
-              <span className="h-px flex-1 bg-border" />
-            </div>
-            <p className="text-muted-foreground text-center leading-relaxed mb-16 max-w-2xl mx-auto">
-              Computer Science studies gave me the foundation. A full stack bootcamp turned that into
-              practical skills. Professional experience in banking - in both technical support and
-              cybersecurity - taught me how software behaves in the real world. Now I'm focused on
-              combining all of it to build things that matter.
-            </p>
-          </FadeIn>
+          <SectionHeader
+            eyebrow="02 / Journey"
+            title="My Journey"
+            description="Computer Science studies gave me the foundation. A full stack bootcamp turned that into practical skills. Professional experience in banking - in both technical support and cybersecurity - taught me how software behaves in the real world. Now I'm focused on combining all of it to build things that matter."
+          />
 
           {/* Timeline */}
           <div className="relative">
