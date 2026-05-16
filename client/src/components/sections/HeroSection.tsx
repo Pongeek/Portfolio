@@ -89,9 +89,9 @@ function AnimatedStat({
 }
 
 const STATS: { display: string; label: string; icon: LucideIcon }[] = [
-  { display: "3+",         label: "Years Coding",       icon: Calendar },
-  { display: "5+",         label: "Projects Shipped",   icon: Rocket   },
-  { display: "Full Stack", label: "Frontend & Backend", icon: Layers   },
+  { display: "1+",          label: "Years of Coding",     icon: Calendar },
+  { display: "4+",          label: "Projects",            icon: Rocket   },
+  { display: "Full-Stack",  label: "Frontend & Backend",  icon: Layers   },
 ];
 
 // ─── Hero section ──────────────────────────────────────────────────────────────
@@ -154,7 +154,7 @@ export default function HeroSection() {
 
             <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-semibold text-primary mb-6 animate-fade-up"
                 style={{ animationDelay: "0.12s" }}>
-              Full Stack Developer
+              Full-Stack Developer
             </h2>
 
             <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-7 animate-fade-up"
