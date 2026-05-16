@@ -7,9 +7,9 @@ import { scrollToSection } from "@/lib/scroll";
 
 // Quick-update list — easy to keep this fresh as work evolves.
 const NOW = [
-  { label: "Learning", value: "Next.js 16 App Router" },
-  { label: "Building", value: "Personal automation tools" },
-  { label: "Shipped",  value: "TileTech business site"  },
+  { label: "Learning",  value: "Next.js 16 App Router"       },
+  { label: "Building",  value: "TileTech client site"        },
+  { label: "Tinkering", value: "Personal automation tools"   },
 ];
 
 export default function AboutSection() {
@@ -118,7 +118,7 @@ export default function AboutSection() {
                     {NOW.map((item) => (
                       <li key={item.label} className="flex items-baseline gap-2 text-sm">
                         <Zap className="h-3 w-3 text-primary/70 flex-shrink-0 self-center" />
-                        <span className="font-mono text-xs text-muted-foreground w-16 flex-shrink-0">
+                        <span className="font-mono text-xs text-muted-foreground w-20 flex-shrink-0">
                           {item.label}
                         </span>
                         <span className="text-foreground/90 leading-snug">

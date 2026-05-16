@@ -32,21 +32,21 @@ export interface CaseStudy {
 export const CASE_STUDIES: Record<string, CaseStudy> = {
   TileTech: {
     role: "Solo developer",
-    year: "2024",
-    tagline: "Bilingual marketing site for a renovation business in central Israel.",
+    year: "2026 – in progress",
+    tagline: "Bilingual marketing site for a renovation business in central Israel — currently under active development.",
     problem:
-      "A family-run tiling business had no online presence and was losing leads to competitors. They needed a bilingual Hebrew/English site that ranked locally and was fast on mobile.",
+      "A family-run tiling business has no online presence and is losing leads to competitors. They need a bilingual Hebrew/English site that ranks locally and feels fast on mobile.",
     approach: [
       "Next.js 14 App Router with statically rendered marketing pages for instant first paint.",
       "Custom RTL/LTR layout primitives so the same components work in both languages without duplication.",
-      "Local-SEO with JSON-LD structured data, automatic sitemap generation, and OpenGraph tags.",
+      "Local-SEO foundation with JSON-LD structured data, automatic sitemap generation, and OpenGraph tags.",
       "Image pipeline that converts to AVIF/WebP at build time and serves responsive sizes via next/image.",
       "Rate-limited, server-validated contact form deployed as a Vercel serverless function.",
     ],
     result: [
-      "Production site live on Vercel with a custom domain.",
-      "Lighthouse performance and accessibility consistently in the 95+ range.",
-      "Now the business's primary marketing channel — leads come directly through the form.",
+      "Currently deployed to a Vercel preview URL while content and bilingual flows are being finalised.",
+      "Performance and accessibility already passing Lighthouse audits in the 95+ range.",
+      "Active build — final design pass, content polish, and a custom domain still ahead of public launch.",
     ],
   },
 

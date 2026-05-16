@@ -85,8 +85,8 @@ export default function ProjectDetailDialog({
         className="max-w-4xl w-[calc(100vw-2rem)] p-0 overflow-hidden
           max-h-[90vh] grid grid-rows-[auto_1fr_auto] rounded-2xl border-border/60"
       >
-        {/* Hero / cover image */}
-        <div className="relative aspect-[16/8] bg-muted overflow-hidden">
+        {/* Hero / cover image - shorter ratio so the body has room at 100% zoom */}
+        <div className="relative aspect-[16/5] max-h-[260px] bg-muted overflow-hidden">
           <BlurImage
             key={active.src}
             src={active.src}
@@ -108,17 +108,17 @@ export default function ProjectDetailDialog({
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t
             from-background via-background/70 to-transparent pointer-events-none" />
 
-          {/* Title overlay */}
-          <div className="absolute inset-x-0 bottom-0 p-6 lg:p-8 pointer-events-none">
-            <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-primary mb-2 drop-shadow">
+          {/* Title overlay - compact so it fits inside the shorter cover */}
+          <div className="absolute inset-x-0 bottom-0 px-6 md:px-8 py-4 md:py-5 pointer-events-none">
+            <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-primary mb-1 drop-shadow">
               Case study
             </p>
-            <DialogTitle className="font-display text-2xl md:text-3xl font-bold
+            <DialogTitle className="font-display text-xl md:text-2xl font-bold
               text-foreground drop-shadow leading-tight">
               {project.title}
             </DialogTitle>
             {study.tagline ? (
-              <DialogDescription className="mt-2 text-sm md:text-base text-foreground/85 drop-shadow max-w-2xl">
+              <DialogDescription className="mt-1 text-xs md:text-sm text-foreground/85 drop-shadow max-w-2xl line-clamp-2">
                 {study.tagline}
               </DialogDescription>
             ) : (
