@@ -14,16 +14,27 @@ type GitHubUser = {
   html_url: string;
 };
 
-type PushPayload = {
-  commits?: { message: string; sha: string }[];
-};
-
+/**
+ * GitHub's public events API used to embed the full `commits` array inside
+ * each PushEvent payload. It no longer does — the payload only carries the
+ * head/before SHAs. So we read `head` and then fetch the commit details
+ * separately to get the actual message.
+ */
 type GitHubEvent = {
   id: string;
   type: string;
   created_at: string;
   repo: { name: string };
-  payload: PushPayload | Record<string, unknown>;
+  payload: { head?: string; before?: string; ref?: string };
+};
+
+type RecentCommit = {
+  id: string;
+  sha: string;
+  message: string;
+  repo: string;
+  createdAt: string;
+  url: string;
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -62,20 +73,65 @@ export default function GitHubActivityCard() {
     retry: 1,
   });
 
-  const eventsQuery = useQuery<GitHubEvent[]>({
-    queryKey: ["github-events", GITHUB_USERNAME],
-    queryFn:  () => fetchJson(`https://api.github.com/users/${GITHUB_USERNAME}/events/public?per_page=10`),
+  const commitsQuery = useQuery<RecentCommit[]>({
+    queryKey: ["github-recent-commits", GITHUB_USERNAME],
+    queryFn: async () => {
+      const events = await fetchJson<GitHubEvent[]>(
+        `https://api.github.com/users/${GITHUB_USERNAME}/events/public?per_page=30`
+      );
+
+      // Keep PushEvents with a head SHA, dedupe by SHA (a force-push and a
+      // follow-up push can share the same head), take the 3 most recent.
+      const seen = new Set<string>();
+      const recentPushes = events
+        .filter((e) => e.type === "PushEvent" && Boolean(e.payload?.head))
+        .filter((e) => {
+          const sha = e.payload.head!;
+          if (seen.has(sha)) return false;
+          seen.add(sha);
+          return true;
+        })
+        .slice(0, 3);
+
+      // Look up the actual commit messages in parallel.
+      return Promise.all(
+        recentPushes.map(async (event): Promise<RecentCommit> => {
+          const sha     = event.payload.head!;
+          const repoFull = event.repo.name;
+          const repoShort = repoFull.split("/").pop() ?? repoFull;
+          try {
+            const commit = await fetchJson<{
+              commit: { message: string };
+              html_url: string;
+            }>(`https://api.github.com/repos/${repoFull}/commits/${sha}`);
+            return {
+              id:        event.id,
+              sha,
+              message:   commit.commit.message.split("\n")[0],
+              repo:      repoShort,
+              createdAt: event.created_at,
+              url:       commit.html_url,
+            };
+          } catch {
+            return {
+              id:        event.id,
+              sha,
+              message:   `Pushed ${sha.slice(0, 7)}`,
+              repo:      repoShort,
+              createdAt: event.created_at,
+              url:       `https://github.com/${repoFull}/commit/${sha}`,
+            };
+          }
+        })
+      );
+    },
     staleTime: 1000 * 60 * 30,
     retry: 1,
   });
 
-  const isLoading = userQuery.isLoading || eventsQuery.isLoading;
-  const hasError  = userQuery.isError && eventsQuery.isError;
-
-  // Latest push events with at least one commit
-  const pushEvents = (eventsQuery.data ?? [])
-    .filter((e) => e.type === "PushEvent" && (e.payload as PushPayload).commits?.length)
-    .slice(0, 3);
+  const isLoading = userQuery.isLoading || commitsQuery.isLoading;
+  const hasError  = userQuery.isError && commitsQuery.isError;
+  const recentCommits = commitsQuery.data ?? [];
 
   return (
     <a
@@ -136,32 +192,27 @@ export default function GitHubActivityCard() {
           <p className="text-xs text-muted-foreground italic">
             Couldn't load activity right now.
           </p>
-        ) : pushEvents.length === 0 ? (
+        ) : recentCommits.length === 0 ? (
           <p className="text-xs text-muted-foreground italic">No recent public commits.</p>
         ) : (
-          pushEvents.map((event) => {
-            const commits = (event.payload as PushPayload).commits ?? [];
-            const message = commits[commits.length - 1].message.split("\n")[0];
-            const repo    = event.repo.name.split("/").pop() ?? event.repo.name;
-            return (
-              <div key={event.id} className="flex items-start gap-2 text-xs">
-                <GitCommit className="h-3.5 w-3.5 mt-0.5 text-primary/70 flex-shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5 flex-wrap leading-tight">
-                    <span className="font-mono text-foreground/90 truncate max-w-full">
-                      {repo}
-                    </span>
-                    <span className="text-[10px] font-mono text-muted-foreground/70">
-                      · {timeAgo(event.created_at)}
-                    </span>
-                  </div>
-                  <p className="text-muted-foreground line-clamp-1 mt-0.5 leading-snug">
-                    {message}
-                  </p>
+          recentCommits.map((c) => (
+            <div key={c.id} className="flex items-start gap-2 text-xs">
+              <GitCommit className="h-3.5 w-3.5 mt-0.5 text-primary/70 flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 flex-wrap leading-tight">
+                  <span className="font-mono text-foreground/90 truncate max-w-full">
+                    {c.repo}
+                  </span>
+                  <span className="text-[10px] font-mono text-muted-foreground/70">
+                    · {timeAgo(c.createdAt)}
+                  </span>
                 </div>
+                <p className="text-muted-foreground line-clamp-1 mt-0.5 leading-snug">
+                  {c.message}
+                </p>
               </div>
-            );
-          })
+            </div>
+          ))
         )}
       </div>
     </a>
