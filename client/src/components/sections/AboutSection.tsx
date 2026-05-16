@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, GraduationCap, MapPin } from "lucide-react";
 import FadeIn from "@/components/FadeIn";
 import SectionHeader from "@/components/SectionHeader";
+import GitHubActivityCard from "@/components/GitHubActivityCard";
 import { scrollToSection } from "@/lib/scroll";
 
 export default function AboutSection() {
@@ -92,6 +93,9 @@ export default function AboutSection() {
                     <p className="text-muted-foreground text-sm">The Open University of Israel</p>
                   </div>
                 </div>
+
+                {/* GitHub activity - live signal that work is ongoing */}
+                <GitHubActivityCard />
 
                 <Button onClick={() => scrollToSection("contact")} className="gap-2 w-full sm:w-auto">
                   Get in Touch

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { GraduationCap, Code2, Headphones, Shield, Laptop } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import FadeIn from "@/components/FadeIn";
@@ -81,6 +82,49 @@ const TYPE_CLASS: Record<TimelineItem["type"], string> = {
 
 // ─── Section ──────────────────────────────────────────────────────────────────
 export default function ExperienceSection() {
+  const timelineRef = useRef<HTMLDivElement>(null);
+  // Progress 0..1 representing how much of the timeline the viewport has passed.
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setProgress(1);
+      return;
+    }
+
+    let rafId: number | null = null;
+    const update = () => {
+      const el = timelineRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const viewportH = window.innerHeight;
+      // Anchor: trigger fill once timeline has reached the middle of the viewport,
+      // complete when its bottom passes the middle.
+      const start = rect.top - viewportH * 0.5;
+      const end   = rect.bottom - viewportH * 0.5;
+      const total = end - start || 1;
+      const passed = -start;
+      const p = Math.max(0, Math.min(1, passed / total));
+      setProgress(p);
+      rafId = null;
+    };
+
+    const onScroll = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
     <section id="experience" className="py-28">
       <div className="container mx-auto px-4 md:px-6">
@@ -93,13 +137,24 @@ export default function ExperienceSection() {
           />
 
           {/* Timeline */}
-          <div className="relative">
-            {/* Vertical spine */}
+          <div ref={timelineRef} className="relative">
+            {/* Vertical spine - faint base track */}
             <div
               className="absolute left-5 top-6 bottom-6 w-px pointer-events-none"
               style={{
                 background:
                   "linear-gradient(to bottom, transparent 0%, hsl(var(--border)/0.6) 10%, hsl(var(--border)/0.6) 90%, transparent 100%)",
+              }}
+            />
+            {/* Vertical spine - scroll-progress fill in primary */}
+            <div
+              className="absolute left-5 top-6 w-px pointer-events-none origin-top"
+              style={{
+                height: `calc((100% - 3rem) * ${progress})`,
+                background:
+                  "linear-gradient(to bottom, hsl(var(--primary)/0.9), hsl(var(--primary)/0.4))",
+                boxShadow: "0 0 8px hsl(var(--primary)/0.4)",
+                transition: "height 0.1s linear",
               }}
             />
 

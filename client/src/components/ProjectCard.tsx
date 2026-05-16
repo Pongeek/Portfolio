@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Github, Globe, ChevronDown } from "lucide-react";
+import { Github, Globe, ChevronDown, ArrowUpRight } from "lucide-react";
 import type { Project } from "@db/schema";
 import { useCardTilt } from "@/hooks/useCardTilt";
 import BlurImage from "@/components/BlurImage";
@@ -54,23 +54,40 @@ export default function ProjectCard({
       className="h-full"
       style={{ willChange: "transform" }}
     >
-      <Card className="group flex flex-col w-full h-full overflow-hidden border-border/60 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-[border-color,box-shadow] duration-300">
+      <Card className="group flex flex-col w-full h-full overflow-hidden border-border/60 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10 transition-[border-color,box-shadow] duration-300">
         {/* Image - 16:9 aspect ratio, zoom on hover, blur-up on load */}
         <div className="relative aspect-video overflow-hidden bg-muted">
           <BlurImage
             src={imageUrl || "/max-profile.png"}
             alt={`${title} screenshot`}
             loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 group-hover:duration-500"
+            className="absolute inset-0 w-full h-full object-cover object-center
+              transition-transform duration-[600ms] ease-out group-hover:scale-110"
             onError={(e) => {
               (e.target as HTMLImageElement).src = "/max-profile.png";
             }}
           />
+
+          {/* Hover overlay - gradient + reveal CTA pill */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/30 to-transparent
+            opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+          <div className="absolute inset-x-0 bottom-3 flex justify-center
+            opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0
+            transition-all duration-300 pointer-events-none">
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full
+              bg-primary text-primary-foreground text-xs font-medium font-mono shadow-lg shadow-primary/30">
+              {hasLiveDemo ? "View Live" : "View Code"}
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </span>
+          </div>
+
           {/* Live badge - shown when the project has a live URL */}
           {hasLiveDemo && (
             <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5
               px-2.5 py-1 rounded-full
-              bg-card/85 backdrop-blur-sm border border-emerald-500/30 shadow-sm">
+              bg-card/85 backdrop-blur-sm border border-emerald-500/30 shadow-sm
+              group-hover:opacity-0 transition-opacity duration-300">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />

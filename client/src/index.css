@@ -144,6 +144,16 @@
 .animate-float-orb     { animation: float-orb      12s ease-in-out infinite; }
 .animate-float-orb-slow{ animation: float-orb-slow 18s ease-in-out infinite; }
 
+/* Hero scroll-line indicator: a short bar that falls down the rail */
+@keyframes scroll-line {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(400%);  opacity: 0; }
+}
+
+.animate-scroll-line { animation: scroll-line 1.8s ease-in-out infinite; }
+
 /* Page-level entrance fade (200 ms, runs once on mount) */
 @keyframes page-enter {
   from { opacity: 0; }

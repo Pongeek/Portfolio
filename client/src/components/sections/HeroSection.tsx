@@ -251,13 +251,14 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground/70 animate-bounce">
-        <span className="text-[10px] font-mono tracking-[0.25em] uppercase">Scroll</span>
-        <svg width="16" height="24" viewBox="0 0 16 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-          <rect x="1" y="1" width="14" height="22" rx="7" />
-          <line x1="8" y1="6" x2="8" y2="10" strokeLinecap="round" />
-        </svg>
+      {/* Scroll indicator - vertical line with a falling pulse */}
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 select-none pointer-events-none">
+        <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-muted-foreground">
+          Scroll
+        </span>
+        <div className="relative h-10 w-px bg-muted-foreground/30 overflow-hidden">
+          <span className="absolute left-0 top-0 h-3 w-px bg-primary animate-scroll-line" />
+        </div>
       </div>
     </section>
   );
