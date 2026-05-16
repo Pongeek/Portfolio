@@ -20,10 +20,11 @@ export default function AboutSection() {
 
           <SectionHeader eyebrow="01 / About" title="About Me" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Single column - photo on top, info below (same on mobile and desktop) */}
+          <div className="flex flex-col items-center gap-14">
 
             {/* Photo */}
-            <FadeIn className="flex justify-center" from="left">
+            <FadeIn className="flex justify-center" from="bottom">
               <div className="relative">
                 {/* Glow */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -69,8 +70,8 @@ export default function AboutSection() {
               </div>
             </FadeIn>
 
-            {/* Bio */}
-            <FadeIn from="right" delay={120}>
+            {/* Bio - constrained width since photo is now stacked on top */}
+            <FadeIn from="bottom" delay={120} className="w-full max-w-2xl">
               <div className="space-y-5">
                 <p className="text-foreground/90 text-lg leading-relaxed">
                   I'm Max, a Full Stack Developer based in Israel. I got into web development

@@ -83,7 +83,7 @@ export default function ProjectDetailDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="max-w-4xl w-[calc(100vw-2rem)] p-0 overflow-hidden
-          max-h-[90vh] grid grid-rows-[auto_1fr] rounded-2xl border-border/60"
+          max-h-[90vh] grid grid-rows-[auto_1fr_auto] rounded-2xl border-border/60"
       >
         {/* Hero / cover image */}
         <div className="relative aspect-[16/8] bg-muted overflow-hidden">
@@ -237,26 +237,26 @@ export default function ProjectDetailDialog({
             </section>
           )}
 
-          {/* CTAs */}
-          <div className="flex flex-wrap gap-3 pt-2 sticky bottom-0 -mx-6 md:-mx-8
-            px-6 md:px-8 py-4
-            bg-gradient-to-t from-background via-background to-background/95
-            border-t border-border/60">
-            {hasLiveUrl && (
-              <Button className="gap-2" asChild>
-                <a href={project.liveUrl!} target="_blank" rel="noopener noreferrer">
-                  <Globe className="h-4 w-4" />
-                  Visit live site
-                </a>
-              </Button>
-            )}
-            <Button variant="outline" className="gap-2" asChild>
-              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                <Github className="h-4 w-4" />
-                View source
+        </div>
+
+        {/* CTAs - fixed footer outside the scroll area so content never bleeds through */}
+        <div className="flex flex-wrap gap-3 px-6 md:px-8 py-4
+          bg-background border-t border-border/60
+          shadow-[0_-8px_24px_-12px_hsl(var(--background))]">
+          {hasLiveUrl && (
+            <Button className="gap-2" asChild>
+              <a href={project.liveUrl!} target="_blank" rel="noopener noreferrer">
+                <Globe className="h-4 w-4" />
+                Visit live site
               </a>
             </Button>
-          </div>
+          )}
+          <Button variant="outline" className="gap-2" asChild>
+            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+              <Github className="h-4 w-4" />
+              View source
+            </a>
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
