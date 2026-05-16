@@ -22,6 +22,7 @@ import {
 import { useInView } from "@/hooks/use-in-view";
 import { scrollToSection } from "@/lib/scroll";
 import CodeCard from "@/components/CodeCard";
+import HeroCursor from "@/components/HeroCursor";
 
 // ─── Tech stack chips shown under the description ─────────────────────────────
 const TECH_STACK = [
@@ -110,37 +111,21 @@ export default function HeroSection() {
   }, [reducedMotion]);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
+    <section id="home" className="hero-cursor-target relative min-h-screen flex items-center overflow-hidden">
+      <HeroCursor targetSelector="#home" />
       {/* Background layers */}
+      {/* Animated multi-color gradient mesh — slowly drifts behind the dot grid.
+          Wrapped so we can attach a subtle parallax tied to scroll position. */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          transform: reducedMotion ? "none" : `translateY(${scrollY * 0.18}px)`,
+          willChange: reducedMotion ? "auto" : "transform",
+        }}
+      >
+        <div className="hero-gradient-mesh" />
+      </div>
       <div className="absolute inset-0 hero-dot-grid opacity-40 pointer-events-none" />
-
-      {/* Right orb - parallax wrapper (scroll) + inner float animation */}
-      <div
-        className="absolute top-1/4 right-0 w-[600px] h-[600px] pointer-events-none"
-        style={{
-          transform: reducedMotion ? "none" : `translateY(${scrollY * 0.28}px)`,
-          willChange: reducedMotion ? "auto" : "transform",
-        }}
-      >
-        <div
-          className={`w-full h-full rounded-full ${reducedMotion ? "" : "animate-float-orb"}`}
-          style={{ background: "radial-gradient(circle, hsl(170 60% 52% / 0.10) 0%, transparent 70%)" }}
-        />
-      </div>
-
-      {/* Left orb - slightly slower parallax for depth layering */}
-      <div
-        className="absolute bottom-1/4 left-0 w-[500px] h-[400px] pointer-events-none"
-        style={{
-          transform: reducedMotion ? "none" : `translateY(${scrollY * 0.16}px)`,
-          willChange: reducedMotion ? "auto" : "transform",
-        }}
-      >
-        <div
-          className={`w-full h-full rounded-full ${reducedMotion ? "" : "animate-float-orb-slow"}`}
-          style={{ background: "radial-gradient(circle, hsl(252 87% 68% / 0.06) 0%, transparent 70%)" }}
-        />
-      </div>
 
       {/* Content - two-column on lg+ */}
       <div className="container mx-auto px-4 md:px-6 pt-24 pb-20 relative z-10">

@@ -1,16 +1,19 @@
+import { useState } from "react";
 import FadeIn from "@/components/FadeIn";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Github, ExternalLink, Sparkles } from "lucide-react";
+import { Github, ExternalLink, Sparkles, ArrowUpRight } from "lucide-react";
 import { useCardTilt } from "@/hooks/useCardTilt";
 import BlurImage from "@/components/BlurImage";
 import type { Project } from "@db/schema";
+import ProjectDetailDialog from "@/components/ProjectDetailDialog";
 
 // ─── Featured project card (full-width, used for the highlighted project) ─────
 export default function FeaturedProjectCard({ project }: { project: Project }) {
   const technologies = Array.isArray(project.technologies) ? project.technologies : [];
   const hasLiveUrl   = Boolean(project.liveUrl && project.liveUrl.trim() !== "");
   const { ref, onMouseMove, onMouseLeave } = useCardTilt();
+  const [open, setOpen] = useState(false);
 
   return (
     <FadeIn>
@@ -117,25 +120,37 @@ export default function FeaturedProjectCard({ project }: { project: Project }) {
             </div>
 
             {/* CTAs */}
-            <div className="flex flex-wrap gap-3">
-              {hasLiveUrl && (
-                <Button className="flex-1 min-w-[120px] gap-2" asChild>
-                  <a href={project.liveUrl!} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-4 w-4" />
-                    Live Demo
+            <div className="flex flex-col gap-2">
+              <Button
+                onClick={() => setOpen(true)}
+                className="w-full gap-2 group/cta"
+              >
+                Read case study
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5" />
+              </Button>
+
+              <div className="flex flex-wrap gap-3">
+                {hasLiveUrl && (
+                  <Button variant="outline" className="flex-1 min-w-[120px] gap-2" asChild>
+                    <a href={project.liveUrl!} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="h-4 w-4" />
+                      Live Demo
+                    </a>
+                  </Button>
+                )}
+                <Button variant="outline" className="flex-1 min-w-[120px] gap-2" asChild>
+                  <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                    <Github className="h-4 w-4" />
+                    View Code
                   </a>
                 </Button>
-              )}
-              <Button variant="outline" className="flex-1 min-w-[120px] gap-2" asChild>
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                  <Github className="h-4 w-4" />
-                  View Code
-                </a>
-              </Button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <ProjectDetailDialog project={project} open={open} onOpenChange={setOpen} />
     </FadeIn>
   );
 }

@@ -177,6 +177,66 @@
   background-size: 28px 28px;
 }
 
+/* When the custom Hero cursor is active, hide the native one inside the hero. */
+.hero-cursor-hide-native,
+.hero-cursor-hide-native * {
+  cursor: none !important;
+}
+
+/* ─── Hero animated gradient mesh ───────────────────────────
+ * Stripe-style soft animated background. Multiple radial gradients
+ * float independently to create a slow shifting "mesh" without WebGL.
+ */
+.hero-gradient-mesh {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-gradient-mesh::before,
+.hero-gradient-mesh::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background-repeat: no-repeat;
+  filter: blur(60px);
+  will-change: transform;
+}
+
+.hero-gradient-mesh::before {
+  background-image:
+    radial-gradient(40% 40% at 20% 30%, hsl(var(--primary) / 0.35), transparent 60%),
+    radial-gradient(35% 35% at 80% 20%, hsl(217 91% 60% / 0.28),     transparent 60%),
+    radial-gradient(45% 45% at 70% 80%, hsl(280 80% 65% / 0.22),     transparent 60%);
+  animation: mesh-drift-1 22s ease-in-out infinite alternate;
+}
+
+.hero-gradient-mesh::after {
+  background-image:
+    radial-gradient(38% 38% at 30% 75%, hsl(var(--primary) / 0.22),  transparent 60%),
+    radial-gradient(30% 30% at 85% 60%, hsl(180 70% 55% / 0.20),     transparent 60%),
+    radial-gradient(42% 42% at 50% 10%, hsl(220 90% 65% / 0.18),     transparent 60%);
+  animation: mesh-drift-2 28s ease-in-out infinite alternate;
+}
+
+@keyframes mesh-drift-1 {
+  0%   { transform: translate3d(0,   0,   0) scale(1);    }
+  50%  { transform: translate3d(3%,  2%,  0) scale(1.05); }
+  100% { transform: translate3d(-2%, 4%,  0) scale(0.98); }
+}
+
+@keyframes mesh-drift-2 {
+  0%   { transform: translate3d(0,   0,   0) scale(1);    }
+  50%  { transform: translate3d(-3%, -2%, 0) scale(1.06); }
+  100% { transform: translate3d(2%,  -4%, 0) scale(0.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-gradient-mesh::before,
+  .hero-gradient-mesh::after { animation: none; }
+}
+
 /* ─── Component utilities ────────────────────────────────── */
 
 .project-card {

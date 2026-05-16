@@ -12,26 +12,19 @@ import { Github, Globe, ChevronDown, ArrowUpRight } from "lucide-react";
 import type { Project } from "@db/schema";
 import { useCardTilt } from "@/hooks/useCardTilt";
 import BlurImage from "@/components/BlurImage";
+import ProjectDetailDialog from "@/components/ProjectDetailDialog";
 
 type ProjectCardProps = {
-  title: Project["title"];
-  description: Project["description"];
-  technologies: string[];
-  imageUrl: Project["imageUrl"];
-  liveUrl: Project["liveUrl"];
-  githubUrl: Project["githubUrl"];
+  project: Project;
 };
 
-export default function ProjectCard({
-  title,
-  description,
-  technologies,
-  imageUrl,
-  liveUrl,
-  githubUrl,
-}: ProjectCardProps) {
+export default function ProjectCard({ project }: ProjectCardProps) {
+  const { title, description, imageUrl, liveUrl, githubUrl } = project;
+  const technologies = Array.isArray(project.technologies) ? project.technologies : [];
   const hasLiveDemo = Boolean(liveUrl && liveUrl.trim() !== "");
   const { ref, onMouseMove, onMouseLeave } = useCardTilt();
+
+  const [open, setOpen] = useState(false);
 
   // "Read more" expand state
   const [expanded, setExpanded] = useState(false);
@@ -54,7 +47,22 @@ export default function ProjectCard({
       className="h-full"
       style={{ willChange: "transform" }}
     >
-      <Card className="group flex flex-col w-full h-full overflow-hidden border-border/60 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10 transition-[border-color,box-shadow] duration-300">
+      <Card
+        onClick={() => setOpen(true)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen(true);
+          }
+        }}
+        aria-label={`Open case study for ${title}`}
+        className="group flex flex-col w-full h-full overflow-hidden border-border/60
+          hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10
+          transition-[border-color,box-shadow] duration-300 cursor-pointer
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
+      >
         {/* Image - 16:9 aspect ratio, zoom on hover, blur-up on load */}
         <div className="relative aspect-video overflow-hidden bg-muted">
           <BlurImage
@@ -77,7 +85,7 @@ export default function ProjectCard({
             transition-all duration-300 pointer-events-none">
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full
               bg-primary text-primary-foreground text-xs font-medium font-mono shadow-lg shadow-primary/30">
-              {hasLiveDemo ? "View Live" : "View Code"}
+              View case study
               <ArrowUpRight className="h-3.5 w-3.5" />
             </span>
           </div>
@@ -139,8 +147,8 @@ export default function ProjectCard({
           </div>
         </CardContent>
 
-        {/* Buttons */}
-        <CardFooter className="p-5 pt-0 gap-2">
+        {/* Buttons - stopPropagation so clicking these doesn't also open the modal */}
+        <CardFooter className="p-5 pt-0 gap-2" onClick={(e) => e.stopPropagation()}>
           {hasLiveDemo && (
             <Button variant="outline" size="sm" className="flex-1" asChild>
               <a href={liveUrl!} target="_blank" rel="noopener noreferrer">
@@ -162,6 +170,8 @@ export default function ProjectCard({
           </Button>
         </CardFooter>
       </Card>
+
+      <ProjectDetailDialog project={project} open={open} onOpenChange={setOpen} />
     </div>
   );
 }

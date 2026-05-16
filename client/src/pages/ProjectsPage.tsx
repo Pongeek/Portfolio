@@ -53,15 +53,7 @@ export default function ProjectsPage() {
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto w-full justify-center">
         {filteredProjects?.map((project: Project) => (
-          <ProjectCard
-            key={project.id}
-            title={project.title}
-            description={project.description}
-            technologies={Array.isArray(project.technologies) ? project.technologies : []}
-            imageUrl={project.imageUrl}
-            liveUrl={project.liveUrl}
-            githubUrl={project.githubUrl}
-          />
+          <ProjectCard key={project.id} project={project} />
         ))}
       </div>
 

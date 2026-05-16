@@ -1,9 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, GraduationCap, MapPin } from "lucide-react";
+import { ArrowRight, GraduationCap, MapPin, Zap } from "lucide-react";
 import FadeIn from "@/components/FadeIn";
 import SectionHeader from "@/components/SectionHeader";
 import GitHubActivityCard from "@/components/GitHubActivityCard";
 import { scrollToSection } from "@/lib/scroll";
+
+// Quick-update list — easy to keep this fresh as work evolves.
+const NOW = [
+  { label: "Learning", value: "Next.js 16 App Router" },
+  { label: "Building", value: "Personal automation tools" },
+  { label: "Shipped",  value: "TileTech business site"  },
+];
 
 export default function AboutSection() {
   return (
@@ -92,6 +99,33 @@ export default function AboutSection() {
                     <p className="font-semibold text-foreground text-sm">B.Sc. Computer Science</p>
                     <p className="text-muted-foreground text-sm">The Open University of Israel</p>
                   </div>
+                </div>
+
+                {/* What I'm doing right now */}
+                <div className="p-4 rounded-xl bg-card border border-border/60
+                  hover:border-primary/30 transition-colors duration-300">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                    </span>
+                    <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-primary">
+                      Currently
+                    </span>
+                  </div>
+                  <ul className="space-y-1.5">
+                    {NOW.map((item) => (
+                      <li key={item.label} className="flex items-baseline gap-2 text-sm">
+                        <Zap className="h-3 w-3 text-primary/70 flex-shrink-0 self-center" />
+                        <span className="font-mono text-xs text-muted-foreground w-16 flex-shrink-0">
+                          {item.label}
+                        </span>
+                        <span className="text-foreground/90 leading-snug">
+                          {item.value}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
                 {/* GitHub activity - live signal that work is ongoing */}
