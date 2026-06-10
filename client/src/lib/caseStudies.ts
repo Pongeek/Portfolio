@@ -30,6 +30,30 @@ export interface CaseStudy {
 }
 
 export const CASE_STUDIES: Record<string, CaseStudy> = {
+  StudyQuest: {
+    role: "Solo developer",
+    year: "2026 – in progress",
+    tagline:
+      "Turn any course PDF into an academic RPG — XP, boss fights, and spaced repetition, powered by Claude.",
+    problem:
+      "Studying from dense course PDFs is passive and demotivating — you read, forget, and have no feedback loop. I wanted the retention science of spaced repetition wrapped in the dopamine loop of a game.",
+    approach: [
+      "PDF-to-course pipeline: Claude classifies an uploaded syllabus or textbook into episodes, topics, and mixed-format quiz questions.",
+      "AI grading for open-ended answers — including Claude vision grading hand-drawn diagrams like automata and proofs photographed from paper.",
+      "SM-2 spaced repetition with confidence weighting: rating an answer 'guessed / unsure / confident' reshapes the review schedule, with overconfidence as the strongest re-review signal.",
+      "Full gamification layer: XP and levels, six rank tiers, boss fights, streaks with freeze tokens, achievements, and a Web Audio synth for sound — no asset files.",
+      "Next.js 16 App Router with React Server Components, Supabase Postgres, and Clerk auth; Hebrew/RTL rendering and KaTeX math throughout.",
+    ],
+    result: [
+      "Live on Vercel with the full learning loop working: quizzes, boss fights, exam prep from past papers, Feynman teach-back mode, and a Mistake Grimoire of failed questions.",
+      "Handles real Hebrew course material end-to-end — questions, feedback, and cheat sheets all render right-to-left with correct math notation.",
+      "Actively developed — clarifier chat, per-topic cheat sheets, and confidence-aware review landed recently.",
+    ],
+    gallery: [
+      { src: "/studyquest-dashboard.png", alt: "StudyQuest dashboard with quest board, streaks, and rank HUD" },
+    ],
+  },
+
   TileTech: {
     role: "Solo developer",
     year: "2026 – in progress",

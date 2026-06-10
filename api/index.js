@@ -271,6 +271,15 @@ function handleProjects(req, res) {
   return res.status(200).json([
     {
       id: 1,
+      title: "StudyQuest",
+      description: "Gamified study platform that turns any course PDF into an academic RPG. Claude extracts episodes, topics, and quiz questions; students earn XP, level up through six ranks, fight episode bosses, and retain knowledge with SM-2 spaced repetition. AI grades open-ended and even hand-drawn answers, with exam prep mode and full Hebrew/RTL support. Live on Vercel.",
+      imageUrl: "/studyquest-preview.png",
+      technologies: ["Next.js 16", "React 19", "TypeScript", "Tailwind v4", "Supabase", "Clerk", "Anthropic API"],
+      githubUrl: "https://github.com/Pongeek/StudyQuest",
+      liveUrl: "https://study-quest-blush.vercel.app"
+    },
+    {
+      id: 2,
       title: "TileTech",
       description: "Professional business website for a tiling and renovation company serving central Israel. Built with Next.js 14 App Router and TypeScript - features bilingual RTL/LTR support for Hebrew and English, SEO optimization with JSON-LD structured data and automatic sitemap generation, image optimization with WebP/AVIF conversion, and a validated contact form. Deployed to Vercel.",
       imageUrl: "/tiletech-preview.png",
@@ -279,7 +288,7 @@ function handleProjects(req, res) {
       liveUrl: "https://tile-tech.vercel.app/"
     },
     {
-      id: 2,
+      id: 3,
       title: "Portfolio Website",
       description: "Full-stack portfolio built with React 18, TypeScript, and Express. Features a PostgreSQL backend with Drizzle ORM, serverless deployment to Vercel, dark/light theming with zero flash, and a rate-limited contact form with server-side validation.",
       imageUrl: "/max-profile.png",
@@ -288,7 +297,7 @@ function handleProjects(req, res) {
       liveUrl: "https://maxmullo.com"
     },
     {
-      id: 3,
+      id: 4,
       title: "CoupCoupon",
       description: "Role-based coupon management system with three distinct user tiers: Admin, Company, and Customer. Java Spring Boot backend exposes a RESTful API secured with JWT. React/TypeScript frontend consumes the API with dynamic dashboards per role, backed by a MySQL database.",
       imageUrl: "/Coupon.png",
@@ -297,7 +306,7 @@ function handleProjects(req, res) {
       liveUrl: ""
     },
     {
-      id: 4,
+      id: 5,
       title: "Billiard Game - Squeak Smalltalk",
       description: "Object-oriented billiard game built from scratch in Squeak Smalltalk. Implements real-time elastic collision physics, mouse-driven trajectory aiming, game-state management, and a clean separation between the physics engine and UI rendering layers.",
       imageUrl: "/billiardTable.png",

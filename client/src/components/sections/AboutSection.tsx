@@ -8,7 +8,7 @@ import { scrollToSection } from "@/lib/scroll";
 // Quick-update list — easy to keep this fresh as work evolves.
 const NOW = [
   { label: "Learning",  value: "Next.js 16 App Router"       },
-  { label: "Building",  value: "TileTech client site"        },
+  { label: "Building",  value: "StudyQuest study platform"   },
   { label: "Tinkering", value: "Personal automation tools"   },
 ];
 

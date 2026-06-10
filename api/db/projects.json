@@ -1,53 +1,49 @@
 {
   "projects": [
     {
-      "id": 1,
+      "title": "StudyQuest",
+      "description": "Gamified study platform that turns any course PDF into an academic RPG. Claude extracts episodes, topics, and quiz questions; students earn XP, level up through six ranks, fight episode bosses, and retain knowledge with SM-2 spaced repetition. AI grades open-ended and even hand-drawn answers, with exam prep mode and full Hebrew/RTL support. Live on Vercel.",
+      "technologies": ["Next.js 16", "React 19", "TypeScript", "Tailwind v4", "Supabase", "Clerk", "Anthropic API"],
+      "imageUrl": "/studyquest-preview.png",
+      "githubUrl": "https://github.com/Pongeek/StudyQuest",
+      "liveUrl": "https://study-quest-blush.vercel.app",
+      "createdAt": "2026-05-19T00:00:00.000Z"
+    },
+    {
+      "title": "TileTech",
+      "description": "Professional business website for a tiling and renovation company serving central Israel. Built with Next.js 14 App Router and TypeScript - features bilingual RTL/LTR support for Hebrew and English, SEO optimization with JSON-LD structured data and automatic sitemap generation, image optimization with WebP/AVIF conversion, and a validated contact form. Deployed to Vercel.",
+      "technologies": ["Next.js 14", "TypeScript", "Tailwind CSS", "React", "Vercel", "SEO"],
+      "imageUrl": "/tiletech-preview.png",
+      "githubUrl": "https://github.com/Pongeek/TileTech",
+      "liveUrl": "https://tile-tech.vercel.app/",
+      "createdAt": "2024-06-01T00:00:00.000Z"
+    },
+    {
       "title": "Portfolio Website",
-      "description": "A modern portfolio website built with React, Express, and PostgreSQL",
-      "technologies": [
-        "React",
-        "TypeScript",
-        "Express",
-        "PostgreSQL",
-        "Tailwind CSS"
-      ],
+      "description": "Full-stack portfolio built with React 18, TypeScript, and Express. Features a PostgreSQL backend with Drizzle ORM, serverless deployment to Vercel, dark/light theming with zero flash, and a rate-limited contact form with server-side validation.",
+      "technologies": ["React", "TypeScript", "Tailwind CSS", "Express", "PostgreSQL"],
       "imageUrl": "/max-profile.png",
-      "liveUrl": "https://portfolio-demo.com",
       "githubUrl": "https://github.com/Pongeek/Portfolio",
-      "createdAt": "2024-12-10T12:20:22.747Z"
+      "liveUrl": "https://maxmullo.com",
+      "createdAt": "2024-01-01T00:00:00.000Z"
     },
     {
-      "id": 8,
       "title": "CoupCoupon",
-      "description": "A comprehensive platform for managing coupons and deals, featuring role-based access control for admins, companies, and customers. Built with modern web technologies. This platform enables admins to manage users and deals, companies to create and manage coupons, and customers to browse and redeem available offers.",
-      "technologies": [
-        "Java Spring",
-        "React",
-        "MySQL",
-        "TypeScript",
-        "JWT",
-        "RestAPI"
-      ],
-      "imageUrl": "/coupcoupon-landing.png",
-      "liveUrl": "https://coupcoupon.repl.co",
+      "description": "Role-based coupon management system with three distinct user tiers: Admin, Company, and Customer. Java Spring Boot backend exposes a RESTful API secured with JWT. React/TypeScript frontend consumes the API with dynamic dashboards per role, backed by a MySQL database.",
+      "technologies": ["Java Spring", "React", "TypeScript", "MySQL", "JWT", "RESTful API"],
+      "imageUrl": "/Coupon.png",
       "githubUrl": "https://github.com/Pongeek/CoupCoupon-client",
-      "createdAt": "2024-12-11T22:03:19.604Z"
+      "liveUrl": "",
+      "createdAt": "2024-01-01T00:00:00.000Z"
     },
     {
-      "id": 9,
       "title": "Billiard Game - Squeak Smalltalk",
-      "description": "An interactive billiard game implemented in Squeak Smalltalk, featuring realistic physics, collision detection, and an intuitive user interface. Players can aim and shoot using mouse controls, with the game automatically handling ball movements, collisions, and pocket detection.",
-      "technologies": [
-        "Squeak Smalltalk",
-        "Object-Oriented Programming",
-        "Physics Simulation",
-        "UI Design",
-        "Game Development"
-      ],
+      "description": "Object-oriented billiard game built from scratch in Squeak Smalltalk. Implements real-time elastic collision physics, mouse-driven trajectory aiming, game-state management, and a clean separation between the physics engine and UI rendering layers.",
+      "technologies": ["Squeak Smalltalk", "OOP", "Physics Simulation", "Game Development"],
       "imageUrl": "/billiardTable.png",
+      "githubUrl": "https://github.com/Pongeek/object-oriented-programming-Squeak-Smalltalk/tree/main",
       "liveUrl": "",
-      "githubUrl": "https://github.com/Pongeek/object-oriented-programming-Squeak-Smalltalk/tree/main/Maman15",
-      "createdAt": "2025-03-02T14:30:00.000Z"
+      "createdAt": "2024-01-01T00:00:00.000Z"
     }
   ]
 }
