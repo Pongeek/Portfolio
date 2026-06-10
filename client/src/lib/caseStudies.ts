@@ -51,6 +51,9 @@ export const CASE_STUDIES: Record<string, CaseStudy> = {
     ],
     gallery: [
       { src: "/studyquest-dashboard.png", alt: "StudyQuest dashboard with quest board, streaks, and rank HUD" },
+      { src: "/studyquest-course.png", alt: "Course page with episode map, topic mastery tiers, and boss fight row" },
+      { src: "/studyquest-quiz.png", alt: "Quiz session with a Hebrew multiple-choice question rendered right-to-left" },
+      { src: "/studyquest-boss.png", alt: "Episode boss fight prep screen with HP bar, trials, and topic loadout" },
     ],
   },
 
